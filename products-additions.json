@@ -1,0 +1,170 @@
+[
+  {
+    "name": "Gawar",
+    "category": "Fresh Cut Vegetables",
+    "size": "250g",
+    "price": 45
+  },
+  {
+    "name": "Bhendi",
+    "category": "Fresh Cut Vegetables",
+    "size": "250g",
+    "price": 45
+  },
+  {
+    "name": "Karle",
+    "category": "Fresh Cut Vegetables",
+    "size": "250g",
+    "price": 50
+  },
+  {
+    "name": "Corn",
+    "category": "Fresh Cut Vegetables",
+    "size": "250g",
+    "price": 55
+  },
+  {
+    "name": "Shimla Mirchi",
+    "category": "Fresh Cut Vegetables",
+    "size": "250g",
+    "price": 60
+  },
+  {
+    "name": "Tendli",
+    "category": "Fresh Cut Vegetables",
+    "size": "250g",
+    "price": 55
+  },
+  {
+    "name": "Vatana",
+    "category": "Fresh Cut Vegetables",
+    "size": "250g",
+    "price": 50
+  },
+  {
+    "name": "Suran",
+    "category": "Fresh Cut Vegetables",
+    "size": "250g",
+    "price": 55
+  },
+  {
+    "name": "Dodka",
+    "category": "Fresh Cut Vegetables",
+    "size": "250g",
+    "price": 50
+  },
+  {
+    "name": "Flower Kobi",
+    "category": "Fresh Cut Vegetables",
+    "size": "250g",
+    "price": 45
+  },
+  {
+    "name": "Pav Bhaji Mix",
+    "category": "Ready-to-Cook Mixes",
+    "size": "500g",
+    "price": 90
+  },
+  {
+    "name": "Pulav Mix",
+    "category": "Ready-to-Cook Mixes",
+    "size": "500g",
+    "price": 95
+  },
+  {
+    "name": "Chinese Mix",
+    "category": "Ready-to-Cook Mixes",
+    "size": "500g",
+    "price": 100
+  },
+  {
+    "name": "Salad Mix",
+    "category": "Ready-to-Cook Mixes",
+    "size": "250g",
+    "price": 75
+  },
+  {
+    "name": "Mixed Vegetables",
+    "category": "Ready-to-Cook Mixes",
+    "size": "500g",
+    "price": 85
+  },
+  {
+    "name": "Moong",
+    "category": "Fresh Sprouts",
+    "size": "250g",
+    "price": 40
+  },
+  {
+    "name": "Matki",
+    "category": "Fresh Sprouts",
+    "size": "250g",
+    "price": 45
+  },
+  {
+    "name": "Channa",
+    "category": "Fresh Sprouts",
+    "size": "250g",
+    "price": 50
+  },
+  {
+    "name": "Cholle",
+    "category": "Fresh Sprouts",
+    "size": "250g",
+    "price": 55
+  },
+  {
+    "name": "Mixed Sprouts",
+    "category": "Fresh Sprouts",
+    "size": "500g",
+    "price": 100
+  },
+  {
+    "name": "Apple",
+    "category": "Fresh Cut Fruits",
+    "size": "500g",
+    "price": 120
+  },
+  {
+    "name": "Banana",
+    "category": "Fresh Cut Fruits",
+    "size": "500g",
+    "price": 60
+  },
+  {
+    "name": "Papaya",
+    "category": "Fresh Cut Fruits",
+    "size": "500g",
+    "price": 70
+  },
+  {
+    "name": "Pomegranate",
+    "category": "Fresh Cut Fruits",
+    "size": "500g",
+    "price": 140
+  },
+  {
+    "name": "Mango",
+    "category": "Fresh Cut Fruits",
+    "size": "500g",
+    "price": 130
+  },
+  {
+    "name": "Orange",
+    "category": "Fresh Cut Fruits",
+    "size": "500g",
+    "price": 90
+  },
+  {
+    "name": "Guava",
+    "category": "Fresh Cut Fruits",
+    "size": "500g",
+    "price": 80
+  },
+  {
+    "name": "Muskmelon",
+    "category": "Fresh Cut Fruits",
+    "size": "500g",
+    "price": 75
+  }
+]

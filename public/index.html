@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b5b2a">
+<title>Kanade Foods | Chop Drop Done</title>
+<style>
+:root{--g:#0b5b2a;--g2:#137a38;--l:#eaf7e8;--o:#f36f21;--ink:#16351f;--muted:#68756d;--line:#e2ebe1;--bg:#f7faf6;--white:#fff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select,textarea{font:inherit}button{cursor:pointer}.top{background:var(--g);color:#fff;text-align:center;padding:8px 12px;font-size:12px;font-weight:700;letter-spacing:.2px}
+header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}.nav{max-width:1180px;margin:auto;padding:10px 18px;display:flex;align-items:center;gap:14px}
+.logo{width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid #e7f2e5}.brand{font-weight:950;font-size:19px;line-height:1;color:var(--g)}.brand small{display:block;color:var(--o);font-size:9px;letter-spacing:1.5px;margin-top:4px}
+.location{border:1px solid #dbe8d9;background:#f7fbf5;border-radius:12px;padding:9px 12px;font-size:12px;white-space:nowrap}.location b{display:block;color:var(--g);font-size:13px}.search{flex:1;min-width:150px;border:1px solid #dbe6d8;background:#f8faf8;border-radius:13px;padding:12px 15px;outline:none}.search:focus{background:#fff;border-color:#7bb58a}
+.cart{border:0;background:var(--g);color:#fff;border-radius:12px;padding:12px 15px;font-weight:850;white-space:nowrap}.cart span{background:#fff;color:var(--g);border-radius:99px;padding:2px 6px;margin-left:4px}
+.hero{max-width:1180px;margin:auto;padding:22px 18px 12px}.heroBox{background:linear-gradient(120deg,#eaf8e8,#fffdf5);border:1px solid #dcebd9;border-radius:24px;display:grid;grid-template-columns:1.35fr .65fr;overflow:hidden;min-height:270px}.heroCopy{padding:32px}.eyebrow{display:inline-block;background:#d9f0d7;color:var(--g);border-radius:99px;padding:7px 11px;font-size:12px;font-weight:850}.hero h1{font-size:clamp(30px,4.5vw,53px);line-height:1.02;margin:13px 0 9px;color:var(--g)}.hero h1 em{font-style:normal;color:var(--o)}.hero p{color:var(--muted);line-height:1.55;max-width:570px;margin:0 0 16px}.heroActions{display:flex;gap:10px;flex-wrap:wrap}.primary{border:0;background:var(--o);color:#fff;padding:12px 17px;border-radius:12px;font-weight:900}.secondary{border:1px solid #cfe0cc;background:#fff;color:var(--g);padding:12px 17px;border-radius:12px;font-weight:900}.heroArt{display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(circle,#fff 0,#eff8e9 68%,#e3f1dc 100%)}.heroArt img{width:min(250px,90%);aspect-ratio:1;object-fit:cover;border-radius:50%;box-shadow:0 14px 30px #123c2022}
+main{max-width:1180px;margin:auto;padding:10px 18px 100px}.notice{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 14px;margin:10px 0 18px;font-size:13px}.notice strong{color:var(--g)}.head{display:flex;align-items:end;justify-content:space-between;margin:15px 0 10px}.head h2{margin:0;font-size:21px}.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}.cat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:14px 10px;text-align:left;font-weight:850;color:var(--ink)}.cat b{display:block;font-size:23px;margin-bottom:7px}.cat.active{border-color:#8fc495;background:#eff9ed;box-shadow:0 5px 16px #123c2010;color:var(--g)}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:11px;box-shadow:0 5px 17px #123c2008;position:relative}.card:hover{box-shadow:0 10px 25px #123c2015;transform:translateY(-1px)}.pic{height:155px;background:#f1f7ed;border-radius:14px;display:flex;align-items:center;justify-content:center;position:relative}.emoji{font-size:68px}.added{position:absolute;top:8px;right:8px;background:#dff4dc;color:var(--g);font-size:11px;font-weight:900;padding:6px 8px;border-radius:99px;display:none}.added.show{display:block}.name{font-weight:900;font-size:16px;margin:11px 2px 3px}.desc{font-size:11px;color:var(--muted);margin:0 2px 10px}.select{width:100%;border:1px solid #dce7da;background:#fff;border-radius:9px;padding:9px}.bottom{display:flex;justify-content:space-between;align-items:center;margin-top:10px}.price{font-weight:950}.add{border:0;background:var(--o);color:#fff;border-radius:9px;padding:9px 12px;font-weight:900}.add:active{transform:scale(.97)}.addedLine{height:18px;margin:7px 2px 0;font-size:11px;color:var(--g);font-weight:800}
+.cartPanel{position:fixed;right:16px;top:76px;width:min(430px,calc(100vw - 32px));height:calc(100vh - 92px);background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 22px 60px #0003;z-index:100;display:none;flex-direction:column;overflow:hidden}.cartPanel.open{display:flex}.cartHead{padding:16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.cartHead h2{margin:0}.close{border:0;background:#eef5ec;border-radius:9px;padding:7px 10px}.items{overflow:auto;padding:0 16px;flex:1}.item{padding:13px 0;border-bottom:1px solid #edf1ec}.itemtop{display:flex;justify-content:space-between;gap:8px}.itemmeta{font-size:12px;color:var(--muted);margin-top:3px}.qty{display:flex;align-items:center;gap:7px;margin-top:8px}.qty button{border:0;background:#eaf5e8;color:var(--g);border-radius:8px;padding:5px 10px;font-weight:900}.remove{background:#fff1ed!important;color:#b4432d!important}.checkoutBox{border-top:1px solid var(--line);padding:14px}.sum{display:grid;gap:5px;font-size:13px}.total{font-size:19px;font-weight:950;color:var(--g);display:flex;justify-content:space-between;margin:5px 0 10px}.field{width:100%;border:1px solid #dbe6d8;border-radius:10px;padding:10px;margin:4px 0;outline:none}.wa{width:100%;border:0;background:#18a34a;color:#fff;border-radius:11px;padding:12px;font-weight:950;margin-top:6px}.float{position:fixed;right:17px;bottom:17px;background:var(--g);color:#fff;border:0;border-radius:16px;padding:13px 16px;font-weight:950;z-index:70;box-shadow:0 8px 24px #123c2040}
+footer{background:#083d1d;color:#eaf6e8;padding:30px 18px}.foot{max-width:1180px;margin:auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.foot strong{font-size:17px;color:#fff}.foot small{display:block;color:#bdd5bf;margin-top:5px}
+@media(max-width:900px){.nav{flex-wrap:wrap}.search{order:5;flex-basis:100%}.heroBox{grid-template-columns:1fr}.heroArt{display:none}.grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:650px){.nav{padding:8px 12px}.brand{font-size:16px}.logo{width:46px;height:46px}.location{margin-left:auto}.cats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:repeat(2,1fr);gap:10px}.pic{height:125px}.emoji{font-size:54px}.card{padding:9px}.add{padding:8px 9px;font-size:12px}.heroCopy{padding:24px}.hero h1{font-size:34px}.cartPanel{top:62px;height:calc(100vh - 75px);right:8px;width:calc(100vw - 16px)}}
+</style>
+</head>
+<body>
+<div class="top">🚚 Delivering in <b>Mulund only</b> • Freshly Cut • Hygienically Packed • Ready to Cook</div>
+<header><div class="nav">
+<img class="logo" src="/kanade-foods-logo-v3.jpg" alt="Kanade Foods">
+<div class="brand">KANADE FOODS<small>CHOP • DROP • DONE</small></div>
+<div class="location">📍 Deliver to <b>Mulund</b></div>
+<input id="search" class="search" placeholder="Search vegetables, fruits, sprouts..." oninput="render()">
+<button class="cart" onclick="toggleCart()">🛒 Cart <span id="cartCount">0</span></button>
+</div></header>
+
+<section class="hero"><div class="heroBox">
+<div class="heroCopy">
+<span class="eyebrow">FRESH CUT • FRESH LIFE</span>
+<h1>Fresh food. <em>Less prep.</em><br>More time.</h1>
+<p>Freshly cut vegetables, fruits, ready-to-cook mixes and sprouts—packed with care and delivered to your doorstep in Mulund.</p>
+<div class="heroActions"><button class="primary" onclick="document.getElementById('products').scrollIntoView()">Shop Fresh →</button><button class="secondary" onclick="toggleCart()">View Cart 🛒</button></div>
+</div><div class="heroArt"><img src="/kanade-foods-logo-v3.jpg" alt="Kanade Foods"></div>
+</div></section>
+
+<main>
+<div class="notice">📍 <strong>Currently serving Mulund only.</strong> Select your products and place the order directly on WhatsApp.</div>
+<div class="head"><h2>Shop by Category</h2></div>
+<div class="cats">
+<button class="cat active" data-cat="Vegetables"><b>🥦</b>Fresh Cut Vegetables</button>
+<button class="cat" data-cat="Fruits"><b>🍎</b>Fresh Cut Fruits</button>
+<button class="cat" data-cat="Ready"><b>🥗</b>Ready-to-Cook Mixes</button>
+<button class="cat" data-cat="Sprouts"><b>🌱</b>Fresh Sprouts</button>
+</div>
+<div class="head"><h2 id="sectionTitle">Fresh Cut Vegetables</h2><span id="resultCount" class="desc"></span></div>
+<div class="grid" id="products"></div>
+</main>
+
+<aside id="cartPanel" class="cartPanel">
+<div class="cartHead"><h2>🛒 Your Cart</h2><button class="close" onclick="toggleCart()">✕</button></div>
+<div class="items" id="items"></div>
+<div class="checkoutBox">
+<div class="sum"><div>Subtotal: ₹<span id="sub">0</span></div><div>Delivery: <span id="del">₹0</span></div></div>
+<div class="total"><span>Total</span><span>₹<span id="total">0</span></span></div>
+<input id="name" class="field" placeholder="Your name">
+<input id="phone" class="field" placeholder="Mobile number">
+<textarea id="address" class="field" rows="2" placeholder="Delivery address in Mulund"></textarea>
+<select id="pay" class="field"><option>Cash on Delivery</option><option>UPI / QR Payment</option></select>
+<button class="wa" onclick="whatsapp()">Confirm Order on WhatsApp →</button>
+</div></aside>
+<button class="float" onclick="toggleCart()">🛒 Cart (<span id="floatCount">0</span>)</button>
+
+<footer><div class="foot"><div><strong>KANADE FOODS</strong><small>Freshly cut • Carefully packed • Delivered with care</small></div><div><strong>Mulund Delivery</strong><small>WhatsApp: 8104130330</small></div></div></footer>
+
+<script>
+const products=[
+{name:"Carrot Cut",cat:"Vegetables",emoji:"🥕",prices:{250:45,500:80,1000:140}},
+{name:"Mixed Veggies",cat:"Vegetables",emoji:"🥦",prices:{250:55,500:100,1000:180}},
+{name:"Capsicum Cut",cat:"Vegetables",emoji:"🫑",prices:{250:60,500:110,1000:200}},
+{name:"Gawar",cat:"Vegetables",emoji:"🌿",prices:{250:45,500:85,1000:150}},
+{name:"Bhendi",cat:"Vegetables",emoji:"🥒",prices:{250:45,500:85,1000:150}},
+{name:"Karle",cat:"Vegetables",emoji:"🥒",prices:{250:50,500:90,1000:160}},
+{name:"Corn",cat:"Vegetables",emoji:"🌽",prices:{250:55,500:100,1000:180}},
+{name:"Shimla Mirchi",cat:"Vegetables",emoji:"🫑",prices:{250:60,500:110,1000:200}},
+{name:"Tendli",cat:"Vegetables",emoji:"🥒",prices:{250:55,500:100,1000:180}},
+{name:"Vatana",cat:"Vegetables",emoji:"🫛",prices:{250:50,500:90,1000:160}},
+{name:"Suran",cat:"Vegetables",emoji:"🥔",prices:{250:55,500:100,1000:180}},
+{name:"Dodka",cat:"Vegetables",emoji:"🥒",prices:{250:50,500:90,1000:160}},
+{name:"Flower Kobi",cat:"Vegetables",emoji:"🥦",prices:{250:45,500:85,1000:150}},
+{name:"Pineapple Cut",cat:"Fruits",emoji:"🍍",prices:{250:70,500:125,1000:220}},
+{name:"Watermelon Cut",cat:"Fruits",emoji:"🍉",prices:{250:45,500:80,1000:140}},
+{name:"Mixed Fruit",cat:"Fruits",emoji:"🍓",prices:{250:80,500:150,1000:280}},
+{name:"Apple",cat:"Fruits",emoji:"🍎",prices:{250:65,500:120,1000:220}},
+{name:"Banana",cat:"Fruits",emoji:"🍌",prices:{250:35,500:60,1000:110}},
+{name:"Papaya",cat:"Fruits",emoji:"🍈",prices:{250:40,500:70,1000:125}},
+{name:"Pomegranate",cat:"Fruits",emoji:"❤️",prices:{250:75,500:140,1000:260}},
+{name:"Mango",cat:"Fruits",emoji:"🥭",prices:{250:70,500:130,1000:240}},
+{name:"Orange",cat:"Fruits",emoji:"🍊",prices:{250:50,500:90,1000:165}},
+{name:"Guava",cat:"Fruits",emoji:"🍐",prices:{250:45,500:80,1000:145}},
+{name:"Muskmelon",cat:"Fruits",emoji:"🍈",prices:{250:40,500:75,1000:135}},
+{name:"Pav Bhaji Mix",cat:"Ready",emoji:"🥘",prices:{250:50,500:90,1000:165}},
+{name:"Pulav Mix",cat:"Ready",emoji:"🍚",prices:{250:55,500:95,1000:175}},
+{name:"Chinese Mix",cat:"Ready",emoji:"🥡",prices:{250:60,500:100,1000:185}},
+{name:"Salad Mix",cat:"Ready",emoji:"🥗",prices:{250:45,500:75,1000:140}},
+{name:"Mixed Vegetables",cat:"Ready",emoji:"🥦",prices:{250:50,500:85,1000:155}},
+{name:"Moong Sprouts",cat:"Sprouts",emoji:"🌱",prices:{250:45,500:85,1000:150}},
+{name:"Matki Sprouts",cat:"Sprouts",emoji:"🌱",prices:{250:45,500:85,1000:150}},
+{name:"Channa Sprouts",cat:"Sprouts",emoji:"🌱",prices:{250:50,500:90,1000:160}},
+{name:"Cholle Sprouts",cat:"Sprouts",emoji:"🌱",prices:{250:55,500:100,1000:180}},
+{name:"Mixed Sprouts",cat:"Sprouts",emoji:"🥗",prices:{250:55,500:100,1000:180}}
+];
+let cat="Vegetables",cart=[];
+
+document.querySelectorAll(".cat").forEach(b=>b.onclick=()=>{document.querySelectorAll(".cat").forEach(x=>x.classList.remove("active"));b.classList.add("active");cat=b.dataset.cat;document.getElementById("sectionTitle").textContent=b.textContent.replace(/🥦|🍎|🥗|🌱/g,"").trim();render()});
+
+function unit(v){return v==="1000"?"1kg":v+"g"}
+function render(){
+ const q=document.getElementById("search").value.toLowerCase();
+ const list=products.filter(p=>p.cat===cat&&p.name.toLowerCase().includes(q));
+ document.getElementById("resultCount").textContent=list.length+" products";
+ document.getElementById("products").innerHTML=list.length?list.map((p,i)=>{
+   const pi=products.indexOf(p), selected=cart.filter(x=>x.name===p.name).reduce((a,x)=>a+x.qty,0);
+   return `<article class="card"><div class="pic"><span class="emoji">${p.emoji}</span><span id="badge${pi}" class="added ${selected?'show':''}">${selected} added</span></div>
+   <div class="name">${p.name}</div><div class="desc">Freshly cut • Hygienically packed</div>
+   <select class="select" id="size${pi}" onchange="updatePrice(${pi})"><option value="250">250g</option><option value="500">500g</option><option value="1000">1kg</option></select>
+   <div class="bottom"><span class="price" id="price${pi}">₹${p.prices[250]}</span><button class="add" onclick="add(${pi})">Add +</button></div>
+   <div class="addedLine" id="line${pi}">${selected?selected+" added to cart":""}</div></article>`}).join(""):`<div style="grid-column:1/-1;background:#fff;border:1px dashed #cfdcc9;border-radius:15px;padding:30px;text-align:center;color:#68756d">No products found. Try another search.</div>`;
+}
+function updatePrice(pi){const p=products[pi],s=document.getElementById("size"+pi).value;document.getElementById("price"+pi).textContent="₹"+p.prices[s]}
+function add(pi){const p=products[pi],s=document.getElementById("size"+pi).value,e=cart.find(x=>x.name===p.name&&x.size===s);if(e)e.qty++;else cart.push({name:p.name,size:s,price:p.prices[s],qty:1});updateCart();const b=document.getElementById("badge"+pi),l=document.getElementById("line"+pi),n=cart.filter(x=>x.name===p.name).reduce((a,x)=>a+x.qty,0);if(b){b.textContent=n+" added";b.classList.add("show");l.textContent=n+" added to cart"}}
+function qty(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updateCart();render()}
+function remove(i){cart.splice(i,1);updateCart();render()}
+function updateCart(){
+ const c=cart.reduce((a,x)=>a+x.qty,0);document.getElementById("cartCount").textContent=c;document.getElementById("floatCount").textContent=c;
+ document.getElementById("items").innerHTML=cart.length?cart.map((x,i)=>`<div class="item"><div class="itemtop"><b>${x.name}</b><b>₹${x.price*x.qty}</b></div><div class="itemmeta">${unit(x.size)} • ₹${x.price} each</div><div class="qty"><button onclick="qty(${i},-1)">−</button><span>${x.qty}</span><button onclick="qty(${i},1)">+</button><button class="qty remove" onclick="remove(${i})">Remove</button></div></div>`).join(""):`<div style="padding:30px 0;text-align:center;color:#68756d">Your cart is empty.<br><br>🌱 Add something fresh to get started.</div>`;
+ const sub=cart.reduce((a,x)=>a+x.price*x.qty,0),d=sub?(sub>=499?0:40):0;document.getElementById("sub").textContent=sub;document.getElementById("del").textContent=d?`₹${d}`:"FREE";document.getElementById("total").textContent=sub+d;
+}
+function toggleCart(){document.getElementById("cartPanel").classList.toggle("open");updateCart()}
+function whatsapp(){
+ if(!cart.length)return alert("Please add a product first.");
+ const n=document.getElementById("name").value.trim(),ph=document.getElementById("phone").value.trim(),a=document.getElementById("address").value.trim();if(!n||!ph||!a)return alert("Please fill your name, mobile number and Mulund delivery address.");
+ const sub=cart.reduce((x,y)=>x+y.price*y.qty,0),d=sub>=499?0:40,t=sub+d,p=document.getElementById("pay").value;
+ const lines=cart.map(x=>`${x.name} - ${unit(x.size)} x ${x.qty} = ₹${x.price*x.qty}`).join("\n");
+ const msg=`Hello Kanade Foods - Chop Drop Done!\n\nOrder:\n${lines}\n\nSubtotal: ₹${sub}\nDelivery: ${d?"₹"+d:"FREE"}\nTotal: ₹${t}\nPayment: ${p}\n\nCustomer: ${n}\nMobile: ${ph}\nDelivery Area: Mulund\nAddress: ${a}`;
+ window.open("https://wa.me/918104130330?text="+encodeURIComponent(msg),"_blank");
+}
+render();updateCart();
+</script>
+</body>
+</html>

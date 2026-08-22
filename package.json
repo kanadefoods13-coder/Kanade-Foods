@@ -1,0 +1,15 @@
+{
+  "name": "kanade-foods-v8-mulund-vercel",
+  "version": "1.0.0",
+  "description": "Professional customer ordering UI inspired by familiar quick-commerce patterns: - Location-first experience, restricted to Mulund - Four categories: Fresh Cut Vegetables, Fresh Cut Fruits, Ready-to-Cook Mixes, Fresh Sprouts - Search, category tabs, cart drawer, quantity controls - Product card shows “1 added”, “2 added”, etc. after adding - Cart displays 1kg instead of 1000g - WhatsApp checkout uses 8104130330 - Mobile responsive - Supplied Kanade Foods logo integrated",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx serve public",
+    "dev": "npx serve public"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

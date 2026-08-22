@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kanade Foods Admin Panel</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f8f3;color:#17351e}
+header{background:linear-gradient(135deg,#18783a,#46a94f);color:#fff;padding:22px 18px}
+.brand{font-size:25px;font-weight:800}
+.tag{margin-top:5px}
+nav{display:flex;gap:8px;overflow:auto;background:#fff;padding:12px;border-bottom:1px solid #dfe9df}
+nav button{border:0;background:#edf6eb;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
+main{max-width:1100px;margin:auto;padding:18px}
+.tab{display:none}
+.tab.active{display:block}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+.card{background:#fff;padding:17px;border-radius:17px;box-shadow:0 3px 12px #0001}
+.num{font-size:25px;font-weight:800;margin-top:8px}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden}
+th,td{padding:12px;border-bottom:1px solid #e8eee8;text-align:left;font-size:14px}
+input,select{padding:10px;border:1px solid #d6e3d6;border-radius:9px;width:100%;margin:5px 0}
+.form{background:#fff;padding:17px;border-radius:17px;margin-bottom:18px}
+.btn{border:0;border-radius:9px;padding:10px 14px;font-weight:700;background:#18783a;color:#fff;cursor:pointer}
+.btn.orange{background:#f28c28}
+.btn.red{background:#c94a3a}
+.btn.blue{background:#2878c8}
+.btn.gray{background:#777}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.status{padding:7px 10px;border-radius:9px;display:inline-block;font-weight:700}
+.available{background:#e6f7e4;color:#18783a}
+.unavailable{background:#ffe7e4;color:#c0392b}
+.product-img{width:55px;height:55px;object-fit:cover;border-radius:10px;border:1px solid #ddd}
+.preview{width:110px;height:110px;object-fit:cover;border-radius:12px;display:none;margin-top:8px}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:999;padding:20px}
+.modal-box{max-width:520px;margin:30px auto;background:#fff;border-radius:18px;padding:20px}
+@media(max-width:700px){
+th,td{padding:8px 5px;font-size:11px}
+.product-img{width:45px;height:45px}
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+
+
+</head>
+
+<body>
+
+<header>
+<div class="brand">KANADE FOODS • ADMIN PANEL</div>
+<div class="tag">CHOP DROP DONE | Manage Products, Orders & Customers</div>
+</header>
+
+<nav>
+<button onclick="showTab('dashboard')">📊 Dashboard</button>
+<button onclick="showTab('orders')">📦 Orders</button>
+<button onclick="showTab('products')">🥦 Products</button>
+<button onclick="showTab('customers')">👤 Customers</button>
+</nav>
+
+<main>
+
+<section id="dashboard" class="tab active">
+<h2>Dashboard</h2>
+
+<div class="cards">
+<div class="card">Today's Orders<div class="num" id="todayOrders">3</div></div>
+<div class="card">Pending Orders<div class="num" id="pendingOrders">0</div></div>
+<div class="card">Today's Sales<div class="num">₹1,245</div></div>
+<div class="card">Products<div class="num" id="productCount">0</div></div>
+</div>
+
+<h2>Quick Actions</h2>
+<button class="btn orange" onclick="showTab('products')">Add Product</button>
+</section>
+
+
+<section id="orders" class="tab">
+<h2>Orders</h2>
+
+<table>
+<thead>
+<tr>
+<th>Order</th>
+<th>Customer</th>
+<th>Amount</th>
+<th>Payment</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="ordersTable"></tbody>
+</table>
+</section>
+
+
+<section id="products" class="tab">
+
+<h2>Product Management</h2>
+
+<div class="form">
+
+<h3>➕ Add New Product</h3>
+
+<label>Product Name</label>
+<input id="pname" placeholder="Example: Tomato Cut">
+
+<label>Category</label>
+<select id="pcat">
+<option>Fresh Cut Vegetables</option>
+<option>Fresh Cut Fruits</option>
+<option>Ready-to-Cook Mixes</option>
+<option>Fresh Sprouts</option>
+</select>
+
+<label>Product Image</label>
+<input id="pimage" type="file" accept="image/*" onchange="previewAddImage()">
+<img id="addPreview" class="preview">
+
+<label>250 gm Price</label>
+<input id="p250" type="number" min="0">
+
+<label>500 gm Price</label>
+<input id="p500" type="number" min="0">
+
+<label>1 kg Price</label>
+<input id="p1000" type="number" min="0">
+
+<label>Availability</label>
+<select id="pstatus">
+<option value="Available">Available</option>
+<option value="Out of Stock">Out of Stock</option>
+</select>
+
+<br>
+
+<button class="btn" onclick="addProduct()">Add Product</button>
+
+</div>
+
+<h3>Existing Products</h3>
+
+<table>
+<thead>
+<tr>
+<th>Image</th>
+<th>Product</th>
+<th>Category</th>
+<th>250g</th>
+<th>500g</th>
+<th>1kg</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="productsTable"></tbody>
+</table>
+
+</section>
+
+
+<section id="customers" class="tab">
+
+<h2>Customers</h2>
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Mobile</th>
+<th>Area</th>
+<th>Orders</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>Demo Customer</td>
+<td>98XXXXXX10</td>
+<td>Mulund</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+
+</main>
+
+
+<div id="editModal" class="modal">
+
+<div class="modal-box">
+
+<h2>✏️ Edit Product</h2>
+
+<input type="hidden" id="editIndex">
+
+<label>Product Name</label>
+<input id="editName">
+
+<label>Category</label>
+<select id="editCategory">
+<option>Fresh Cut Vegetables</option>
+<option>Fresh Cut Fruits</option>
+<option>Ready-to-Cook Mixes</option>
+<option>Fresh Sprouts</option>
+</select>
+
+<label>Product Image</label>
+<input id="editImage" type="file" accept="image/*" onchange="previewEditImage()">
+
+<img id="editPreview" class="preview">
+
+<label>250 gm Price</label>
+<input id="edit250" type="number" min="0">
+
+<label>500 gm Price</label>
+<input id="edit500" type="number" min="0">
+
+<label>1 kg Price</label>
+<input id="edit1000" type="number" min="0">
+
+<label>Availability</label>
+<select id="editStatus">
+<option value="Available">Available</option>
+<option value="Out of Stock">Out of Stock</option>
+</select>
+
+<br>
+
+<button class="btn" onclick="saveEdit()">Save Changes</button>
+<button class="btn gray" onclick="closeEdit()">Cancel</button>
+
+</div>
+</div>
+
+
+<script>
+
+var orders = [
+{id:"#CDD1001",customer:"Rahul",amount:320,payment:"COD",status:"Received"},
+{id:"#CDD1002",customer:"Sneha",amount:560,payment:"UPI",status:"Preparing"},
+{id:"#CDD1003",customer:"Amit",amount:365,payment:"COD",status:"Out for Delivery"}
+];
+
+var defaultProducts = [
+{name:"Carrot Cut",category:"Fresh Cut Vegetables",image:"",p250:45,p500:80,p1000:140,status:"Available"},
+{name:"Mixed Veggies",category:"Fresh Cut Vegetables",image:"",p250:55,p500:100,p1000:180,status:"Available"},
+{name:"Capsicum Cut",category:"Fresh Cut Vegetables",image:"",p250:60,p500:110,p1000:200,status:"Available"},
+{name:"Pineapple Cut",category:"Fresh Cut Fruits",image:"",p250:70,p500:125,p1000:220,status:"Available"},
+{name:"Watermelon Cut",category:"Fresh Cut Fruits",image:"",p250:45,p500:80,p1000:140,status:"Available"},
+{name:"Mixed Fruit",category:"Fresh Cut Fruits",image:"",p250:80,p500:150,p1000:280,status:"Available"}
+];
+
+var stored = localStorage.getItem("kanadeFoodsProducts");
+var products = stored ? JSON.parse(stored) : defaultProducts;
+
+
+function saveProducts(){
+localStorage.setItem("kanadeFoodsProducts",JSON.stringify(products));
+}
+
+
+function showTab(id){
+
+var tabs=document.querySelectorAll(".tab");
+
+for(var i=0;i<tabs.length;i++){
+tabs[i].classList.remove("active");
+}
+
+document.getElementById(id).classList.add("active");
+
+render();
+}
+
+
+function render(){
+
+var orderHTML="";
+
+for(var i=0;i<orders.length;i++){
+
+var o=orders[i];
+
+orderHTML +=
+"<tr>"+
+"<td>"+o.id+"</td>"+
+"<td>"+o.customer+"</td>"+
+"<td>₹"+o.amount+"</td>"+
+"<td>"+o.payment+"</td>"+
+"<td><span class='status available'>"+o.status+"</span></td>"+
+"<td>"+
+"<select onchange='changeStatus("+i+",this.value)'>"+
+"<option "+(o.status=="Received"?"selected":"")+">Received</option>"+
+"<option "+(o.status=="Preparing"?"selected":"")+">Preparing</option>"+
+"<option "+(o.status=="Out for Delivery"?"selected":"")+">Out for Delivery</option>"+
+"<option "+(o.status=="Delivered"?"selected":"")+">Delivered</option>"+
+"</select>"+
+"</td>"+
+"</tr>";
+
+}
+
+document.getElementById("ordersTable").innerHTML=orderHTML;
+
+
+var productHTML="";
+
+for(var j=0;j<products.length;j++){
+
+var p=products[j];
+
+var imageHTML = p.image
+? "<img class='product-img' src='"+p.image+"'>"
+: "<div class='product-img'></div>";
+
+var statusClass = p.status=="Available"
+? "available"
+: "unavailable";
+
+productHTML +=
+"<tr>"+
+"<td>"+imageHTML+"</td>"+
+"<td><strong>"+p.name+"</strong></td>"+
+"<td>"+p.category+"</td>"+
+"<td>₹"+p.p250+"</td>"+
+"<td>₹"+p.p500+"</td>"+
+"<td>₹"+p.p1000+"</td>"+
+"<td><span class='status "+statusClass+"'>"+p.status+"</span></td>"+
+"<td>"+
+"<div class='actions'>"+
+"<button class='btn blue' onclick='editProduct("+j+")'>Edit</button>"+
+"<button class='btn orange' onclick='toggleProduct("+j+")'>"+
+(p.status=="Available"?"Out of Stock":"Make Available")+
+"</button>"+
+"<button class='btn red' onclick='deleteProduct("+j+")'>Delete</button>"+
+"</div>"+
+"</td>"+
+"</tr>";
+
+}
+
+document.getElementById("productsTable").innerHTML=productHTML;
+
+document.getElementById("productCount").innerText=products.length;
+
+document.getElementById("pendingOrders").innerText=
+orders.filter(function(o){return o.status!="Delivered";}).length;
+
+}
+
+
+function changeStatus(i,status){
+orders[i].status=status;
+render();
+}
+
+
+function previewAddImage(){
+
+var file=document.getElementById("pimage").files[0];
+
+if(!file)return;
+
+var reader=new FileReader();
+
+reader.onload=function(e){
+var img=document.getElementById("addPreview");
+img.src=e.target.result;
+img.style.display="block";
+};
+
+reader.readAsDataURL(file);
+}
+
+
+async function addProduct(){
+
+var name=document.getElementById("pname").value.trim();
+var category=document.getElementById("pcat").value;
+var p250=Number(document.getElementById("p250").value);
+var p500=Number(document.getElementById("p500").value);
+var p1000=Number(document.getElementById("p1000").value);
+var status=document.getElementById("pstatus").value;
+var file=document.getElementById("pimage").files[0];
+
+if(!name || p250<=0 || p500<=0 || p1000<=0){
+alert("Please fill product name and all prices.");
+return;
+}
+
+try{
+
+var imageUrl="";
+if(file){
+
+var fileName=Date.now()+"-"+file.name.replace(/\s+/g,"-");
+
+var {error:uploadError}=await supabaseClient
+.storage
+.from("product-images")
+.upload(fileName,file);
+
+if(uploadError) throw uploadError;
+
+var {data:imageData}=supabaseClient
+.storage
+.from("product-images")
+.getPublicUrl(fileName);
+
+imageUrl=imageData.publicUrl;
+}
+var {data,error}=await supabaseClient
+.from("products")
+.insert([{
+name:name,
+category:category,
+// image_url:imageUrl,
+price_250g:p250,
+price_500g:p500,
+price_1kg:p1000,
+status:status
+}])
+.select();
+
+if(error) throw error;
+
+products.push({
+name:name,
+category:category,
+image:imageUrl,
+p250:p250,
+p500:p500,
+p1000:p1000,
+status:status
+});
+
+saveProducts();
+clearAddForm();
+render();
+
+alert("Product added successfully to Supabase.");
+
+}catch(error){
+
+console.error(error);
+
+alert("Product save failed: "+error.message);
+
+}
+
+}
+
+function clearAddForm(){
+
+document.getElementById("pname").value="";
+document.getElementById("p250").value="";
+document.getElementById("p500").value="";
+document.getElementById("p1000").value="";
+document.getElementById("pimage").value="";
+document.getElementById("pstatus").value="Available";
+
+document.getElementById("addPreview").style.display="none";
+}
+
+
+function editProduct(i){
+
+var p=products[i];
+
+document.getElementById("editIndex").value=i;
+document.getElementById("editName").value=p.name;
+document.getElementById("editCategory").value=p.category;
+document.getElementById("edit250").value=p.p250;
+document.getElementById("edit500").value=p.p500;
+document.getElementById("edit1000").value=p.p1000;
+document.getElementById("editStatus").value=p.status;
+document.getElementById("editImage").value="";
+
+var img=document.getElementById("editPreview");
+
+if(p.image){
+img.src=p.image;
+img.style.display="block";
+}else{
+img.style.display="none";
+}
+
+document.getElementById("editModal").style.display="block";
+}
+
+
+function previewEditImage(){
+
+var file=document.getElementById("editImage").files[0];
+
+if(!file)return;
+
+var reader=new FileReader();
+
+reader.onload=function(e){
+
+var img=document.getElementById("editPreview");
+
+img.src=e.target.result;
+img.style.display="block";
+
+};
+
+reader.readAsDataURL(file);
+}
+
+
+function saveEdit(){
+
+var i=Number(document.getElementById("editIndex").value);
+var p=products[i];
+
+var name=document.getElementById("editName").value.trim();
+var category=document.getElementById("editCategory").value;
+var p250=Number(document.getElementById("edit250").value);
+var p500=Number(document.getElementById("edit500").value);
+var p1000=Number(document.getElementById("edit1000").value);
+var status=document.getElementById("editStatus").value;
+var file=document.getElementById("editImage").files[0];
+
+
+if(!name || p250<=0 || p500<=0 || p1000<=0){
+alert("Please fill product name and all prices.");
+return;
+}
+
+
+function finish(image){
+
+p.name=name;
+p.category=category;
+p.p250=p250;
+p.p500=p500;
+p.p1000=p1000;
+p.status=status;
+
+if(image){
+p.image=image;
+}
+
+saveProducts();
+closeEdit();
+render();
+
+alert("Product updated successfully.");
+}
+
+
+if(file){
+
+var reader=new FileReader();
+
+reader.onload=function(e){
+finish(e.target.result);
+};
+
+reader.readAsDataURL(file);
+
+}else{
+
+finish("");
+
+}
+
+}
+
+
+function closeEdit(){
+document.getElementById("editModal").style.display="none";
+}
+
+
+function toggleProduct(i){
+
+if(products[i].status=="Available"){
+products[i].status="Out of Stock";
+}else{
+products[i].status="Available";
+}
+
+saveProducts();
+render();
+}
+
+
+function deleteProduct(i){
+
+if(confirm("Delete this product?")){
+
+products.splice(i,1);
+
+saveProducts();
+render();
+
+}
+
+}
+
+
+render();
+
+</script>
+
+</body>
+</html>
