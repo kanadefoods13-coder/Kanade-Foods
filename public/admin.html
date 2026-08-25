@@ -650,16 +650,40 @@ document.getElementById("editModal").style.display="none";
 }
 
 
-function toggleProduct(i){
+async function toggleProduct(i){
 
-if(products[i].status=="Available"){
-products[i].status="Out of Stock";
-}else{
-products[i].status="Available";
-}
+    var p = products[i];
 
-saveProducts();
-render();
+    var newStatus =
+        p.status === "Available"
+        ? "Out of Stock"
+        : "Available";
+
+    try {
+
+        var { error } = await supabaseClient
+            .from("products")
+            .update({
+                status: newStatus
+            })
+            .eq("id", p.id);
+
+        if(error){
+            throw error;
+        }
+
+        // Update local product
+        p.status = newStatus;
+
+        saveProducts();
+        render();
+
+    } catch(error){
+
+        console.error("Status update error:", error);
+
+        alert("Status update failed: " + error.message);
+    }
 }
 
 
