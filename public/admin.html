@@ -55,10 +55,10 @@ th,td{padding:8px 5px;font-size:11px}
 </header>
 
 <nav>
-<button onclick="showTab('dashboard')">📊 Dashboard</button>
-<button onclick="showTab('orders')">📦 Orders</button>
-<button onclick="showTab('products')">🥦 Products</button>
-<button onclick="showTab('customers')">👤 Customers</button>
+<button onclick="window.showTab('dashboard')">📊 Dashboard</button>
+<button onclick="window.showTab('orders')">📦 Orders</button>
+<button onclick="window.showTab('products')">🥦 Products</button>
+<button onclick="window.showTab('customers')">👤 Customers</button>
 </nav>
 
 <main>
@@ -74,7 +74,7 @@ th,td{padding:8px 5px;font-size:11px}
 </div>
 
 <h2>Quick Actions</h2>
-<button class="btn orange" onclick="showTab('products')">Add Product</button>
+<button class="btn orange" onclick="window.showTab('products')">Add Product</button>
 </section>
 
 
@@ -241,7 +241,22 @@ th,td{padding:8px 5px;font-size:11px}
 
 
 <script>
+window.showTab = function(id){
 
+    var tabs = document.querySelectorAll(".tab");
+
+    for(var i = 0; i < tabs.length; i++){
+        tabs[i].classList.remove("active");
+    }
+
+    var selectedTab = document.getElementById(id);
+
+    if(selectedTab){
+        selectedTab.classList.add("active");
+    }
+
+    render();
+};
 var orders = [
 {id:"#CDD1001",customer:"Rahul",amount:320,payment:"COD",status:"Received"},
 {id:"#CDD1002",customer:"Sneha",amount:560,payment:"UPI",status:"Preparing"},
