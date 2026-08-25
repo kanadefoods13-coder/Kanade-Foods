@@ -586,14 +586,36 @@ async function saveEdit(){
       updateData.image_url = imageUrl;
     }
 
-    var result = await supabaseClient
+   var productId = p.id;
+
+if(!productId){
+
+    var findResult = await supabaseClient
+        .from("products")
+        .select("id")
+        .eq("name", oldName)
+        .maybeSingle();
+
+    if(findResult.error){
+        throw findResult.error;
+    }
+
+    if(!findResult.data){
+        throw new Error("Product not found in Supabase.");
+    }
+
+    productId = findResult.data.id;
+    p.id = productId;
+}
+
+var result = await supabaseClient
     .from("products")
     .update(updateData)
-    .eq("id", p.id);
+    .eq("id", productId);
 
-    if(result.error){
-      throw result.error;
-    }
+if(result.error){
+    throw result.error;
+}
 
     /* =========================
        UPDATE LOCAL PRODUCT
