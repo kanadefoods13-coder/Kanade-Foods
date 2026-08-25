@@ -687,23 +687,46 @@ async function toggleProduct(i){
 }
 
 
-function deleteProduct(i){
+async function deleteProduct(i){
 
-if(confirm("Delete this product?")){
+    var p = products[i];
 
-products.splice(i,1);
+    if(!p){
+        alert("Product not found.");
+        return;
+    }
 
-saveProducts();
-render();
+    if(!confirm("Delete this product?")){
+        return;
+    }
 
+    try{
+
+        if(!p.id){
+            throw new Error("Product ID is missing.");
+        }
+
+        var { error } = await supabaseClient
+            .from("products")
+            .delete()
+            .eq("id", p.id);
+
+        if(error){
+            throw error;
+        }
+
+        // Update local product list
+        products.splice(i, 1);
+
+        saveProducts();
+        render();
+
+        alert("Product deleted successfully from Supabase.");
+
+    }catch(error){
+
+        console.error("Delete product error:", error);
+
+        alert("Product delete failed: " + error.message);
+    }
 }
-
-}
-
-
-render();
-
-</script>
-
-</body>
-</html>
