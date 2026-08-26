@@ -411,14 +411,17 @@ orders.filter(function(o){return o.status!="Delivered";}).length;
 }
 
 
-async function changeStatus(i,status){
+async function changeStatus(i, status){
 
     var order = orders[i];
 
-    var { error } = await supabaseClient
+    console.log("Updating order:", order.dbId, "to:", status);
+
+    var { data, error } = await supabaseClient
         .from("orders")
         .update({ status: status })
-        .eq("id", order.dbId);
+        .eq("id", order.dbId)
+        .select();
 
     if(error){
         console.error("Order status update error:", error);
@@ -426,7 +429,10 @@ async function changeStatus(i,status){
         return;
     }
 
+    console.log("Status updated successfully:", data);
+
     orders[i].status = status;
+
     render();
 }
 
