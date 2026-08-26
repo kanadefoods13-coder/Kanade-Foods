@@ -68,6 +68,28 @@ footer{background:#083d1d;color:#eaf6e8;padding:30px 18px}.foot{max-width:1180px
 <select id="pay" class="field"><option>Cash on Delivery</option><option>UPI / QR Payment</option></select>
 <button class="wa" onclick="whatsapp()">Confirm Order on WhatsApp →</button>
 </div></aside>
+</aside>
+
+<section class="track-order">
+  <div class="head">
+    <h2>Track Your Order</h2>
+  </div>
+
+  <div class="track-box">
+    <input
+      id="trackOrderNo"
+      class="field"
+      placeholder="Enter Order No. e.g. CDD892273"
+    >
+
+    <button class="primary" onclick="trackOrder()">
+      Track Order
+    </button>
+
+    <div id="trackResult"></div>
+  </div>
+</section>
+
 <button class="float" onclick="toggleCart()">🛒 Cart (<span id="floatCount">0</span>)</button>
 
 <footer><div class="foot"><div><strong>KANADE FOODS</strong><small>Freshly cut • Carefully packed • Delivered with care</small></div><div><strong>Mulund Delivery</strong><small>WhatsApp: 8104130330</small></div></div></footer>
@@ -136,6 +158,66 @@ function updateCart(){
  const sub=cart.reduce((a,x)=>a+x.price*x.qty,0),d=sub?(sub>=499?0:40):0;document.getElementById("sub").textContent=sub;document.getElementById("del").textContent=d?`₹${d}`:"FREE";document.getElementById("total").textContent=sub+d;
 }
 function toggleCart(){document.getElementById("cartPanel").classList.toggle("open");updateCart()}
+async function trackOrder(){
+
+  const orderNo = document
+    .getElementById("trackOrderNo")
+    .value
+    .trim();
+
+  const result = document.getElementById("trackResult");
+
+  if(!orderNo){
+    result.innerHTML = "<p>Please enter your Order No.</p>";
+    return;
+  }
+
+  result.innerHTML = "<p>Checking your order...</p>";
+
+  const { data, error } = await supabaseClient
+    .from("orders")
+    .select("order_number, customer_name, total_amount, status")
+    .eq("order_number", orderNo)
+    .maybeSingle();
+
+  if(error){
+    console.error("Track order error:", error);
+    result.innerHTML = "<p>Unable to check order. Please try again.</p>";
+    return;
+  }
+
+  if(!data){
+    result.innerHTML = "<p>Order not found. Please check your Order No.</p>";
+    return;
+  }
+
+  let message = "";
+
+  if(data.status === "Pending"){
+    message = "Your order has been received and is waiting for confirmation.";
+  }
+  else if(data.status === "Received"){
+    message = "Your order has been received successfully.";
+  }
+  else if(data.status === "Preparing"){
+    message = "Your fresh order is being prepared.";
+  }
+  else if(data.status === "Out for Delivery"){
+    message = "Your order is on the way. 🚚";
+  }
+  else if(data.status === "Delivered"){
+    message = "Your order has been delivered successfully. 🎉";
+  }
+
+  result.innerHTML =
+    "<div class='track-result'>" +
+      "<h3>Order: " + data.order_number + "</h3>" +
+      "<p><strong>Customer:</strong> " + data.customer_name + "</p>" +
+      "<p><strong>Total:</strong> ₹" + data.total_amount + "</p>" +
+      "<p><strong>Status:</strong> " + data.status + "</p>" +
+      "<p>" + message + "</p>" +
+    "</div>";
+}
 async function whatsapp(){
 
     if(!cart.length)
