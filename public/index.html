@@ -184,10 +184,9 @@ async function whatsapp(){
         return;
     }
 
-    const lines = cart.map(x =>
-        ${x.name} - ${unit(x.size)} x ${x.qty} = ₹${x.price*x.qty}
-    ).join("\n");
-
+  const lines = cart.map(function(x){
+    return x.name + " - " + unit(x.size) + " x " + x.qty + " = ₹" + (x.price * x.qty);
+}).join("\n");
     const msg =
 `Hello Kanade Foods - Chop Drop Done!
 
