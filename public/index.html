@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/supabase-config.js"></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0b5b2a">
@@ -134,13 +136,83 @@ function updateCart(){
  const sub=cart.reduce((a,x)=>a+x.price*x.qty,0),d=sub?(sub>=499?0:40):0;document.getElementById("sub").textContent=sub;document.getElementById("del").textContent=d?`₹${d}`:"FREE";document.getElementById("total").textContent=sub+d;
 }
 function toggleCart(){document.getElementById("cartPanel").classList.toggle("open");updateCart()}
-function whatsapp(){
- if(!cart.length)return alert("Please add a product first.");
- const n=document.getElementById("name").value.trim(),ph=document.getElementById("phone").value.trim(),a=document.getElementById("address").value.trim();if(!n||!ph||!a)return alert("Please fill your name, mobile number and Mulund delivery address.");
- const sub=cart.reduce((x,y)=>x+y.price*y.qty,0),d=sub>=499?0:40,t=sub+d,p=document.getElementById("pay").value;
- const lines=cart.map(x=>`${x.name} - ${unit(x.size)} x ${x.qty} = ₹${x.price*x.qty}`).join("\n");
- const msg=`Hello Kanade Foods - Chop Drop Done!\n\nOrder:\n${lines}\n\nSubtotal: ₹${sub}\nDelivery: ${d?"₹"+d:"FREE"}\nTotal: ₹${t}\nPayment: ${p}\n\nCustomer: ${n}\nMobile: ${ph}\nDelivery Area: Mulund\nAddress: ${a}`;
- window.open("https://wa.me/918104130330?text="+encodeURIComponent(msg),"_blank");
+async function whatsapp(){
+
+    if(!cart.length)
+        return alert("Please add a product first.");
+
+    const n = document.getElementById("name").value.trim();
+    const ph = document.getElementById("phone").value.trim();
+    const a = document.getElementById("address").value.trim();
+
+    if(!n || !ph || !a)
+        return alert("Please fill your name, mobile number and Mulund delivery address.");
+
+    const sub = cart.reduce((x,y)=>x+y.price*y.qty,0);
+    const d = sub >= 499 ? 0 : 40;
+    const t = sub + d;
+    const p = document.getElementById("pay").value;
+
+    const orderNumber =
+        "CDD" + Date.now().toString().slice(-6);
+
+    const items = cart.map(x => ({
+        name: x.name,
+        size: unit(x.size),
+        quantity: x.qty,
+        price: x.price
+    }));
+
+    const { data, error } = await supabaseClient
+        .from("orders")
+        .insert([{
+            order_number: orderNumber,
+            customer_name: n,
+            mobile: ph,
+            address: a,
+            area: "Mulund",
+            items: items,
+            total_amount: t,
+            payment_method: p,
+            status: "Pending"
+        }])
+        .select();
+
+    if(error){
+        console.error("Order save error:", error);
+        alert("Order could not be placed. Please try again.");
+        return;
+    }
+
+    const lines = cart.map(x =>
+        ${x.name} - ${unit(x.size)} x ${x.qty} = ₹${x.price*x.qty}
+    ).join("\n");
+
+    const msg =
+`Hello Kanade Foods - Chop Drop Done!
+
+Order No: ${orderNumber}
+
+Order:
+${lines}
+
+Subtotal: ₹${sub}
+Delivery: ${d ? "₹"+d : "FREE"}
+Total: ₹${t}
+Payment: ${p}
+
+Customer: ${n}
+Mobile: ${ph}
+Delivery Area: Mulund
+Address: ${a}`;
+
+    alert("Order placed successfully! Order No: " + orderNumber);
+
+    window.open(
+        "https://wa.me/918104130330?text=" +
+        encodeURIComponent(msg),
+        "_blank"
+    );
 }
 render();updateCart();
 </script>
