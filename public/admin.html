@@ -275,9 +275,36 @@ var defaultProducts = [
 {name:"Mixed Fruit",category:"Fresh Cut Fruits",image:"",p250:80,p500:150,p1000:280,status:"Available"}
 ];
 
-var stored = localStorage.getItem("kanadeFoodsProducts");
-var products = stored ? JSON.parse(stored) : defaultProducts;
+var products = [];
 
+async function loadProductsFromSupabase(){
+
+    var { data, error } = await supabaseClient
+        .from("products")
+        .select("*")
+        .order("id", { ascending: true });
+
+    if(error){
+        console.error("Products load error:", error);
+        alert("Products load failed: " + error.message);
+        return;
+    }
+
+    products = (data || []).map(function(p){
+        return {
+            id: p.id,
+            name: p.name,
+            category: p.category,
+            image: p.image_url || "",
+            p250: p.price_250g,
+            p500: p.price_500g,
+            p1000: p.price_1kg,
+            status: p.status || "Available"
+        };
+    });
+
+    render();
+}
 
 function saveProducts(){
 localStorage.setItem("kanadeFoodsProducts",JSON.stringify(products));
@@ -737,3 +764,8 @@ async function deleteProduct(i){
         alert("Product delete failed: " + error.message);
     }
 }
+loadProductsFromSupabase();
+
+</script>
+</body>
+</html>
