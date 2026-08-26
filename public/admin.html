@@ -197,10 +197,8 @@ window.showTab = function(id) {
 
 <tbody>
 <tr>
-<td>Demo Customer</td>
-<td>98XXXXXX10</td>
-<td>Mulund</td>
-<td>2</td>
+<tbody>
+</tbody>
 </tr>
 </tbody>
 </table>
@@ -315,17 +313,18 @@ async function loadOrdersFromSupabase(){
     }
 
     orders = (data || []).map(function(o){
-        return {
-            dbId: o.id,
-            id: o.order_number,
-            customer: o.customer_name,
-            mobile: o.mobile,
-            amount: o.total_amount,
-            payment: o.payment_method,
-            status: o.status
-            
-        };
-    });
+    return {
+        dbId: o.id,
+        id: o.order_number,
+        customer: o.customer_name,
+        mobile: o.mobile,
+        address: o.address,
+        area: o.area,
+        amount: o.total_amount,
+        payment: o.payment_method,
+        status: o.status
+    };
+});
 
     render();
 }
@@ -409,6 +408,49 @@ document.getElementById("productCount").innerText=products.length;
 
 document.getElementById("pendingOrders").innerText=
 orders.filter(function(o){return o.status!="Delivered";}).length;
+// Customers
+var customers = [];
+var customerMap = {};
+
+for(var k=0;k<orders.length;k++){
+
+    var order = orders[k];
+    var mobile = order.mobile || "";
+
+    if(!customerMap[mobile]){
+
+        customerMap[mobile] = {
+            name: order.customer || "Customer",
+            mobile: mobile,
+            area: order.area || "Mulund",
+            orders: 1
+        };
+
+        customers.push(customerMap[mobile]);
+
+    } else {
+
+        customerMap[mobile].orders++;
+
+    }
+}
+
+var customerHTML = "";
+
+for(var c=0;c<customers.length;c++){
+
+    var customer = customers[c];
+
+    customerHTML +=
+    "<tr>"+
+    "<td>"+customer.name+"</td>"+
+    "<td>"+customer.mobile+"</td>"+
+    "<td>"+customer.area+"</td>"+
+    "<td>"+customer.orders+"</td>"+
+    "</tr>";
+}
+
+document.querySelector("#customers tbody").innerHTML = customerHTML;
 
 }
 
