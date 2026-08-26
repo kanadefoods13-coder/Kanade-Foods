@@ -260,11 +260,7 @@ window.showTab = function(id) {
 
 <script>
 
-var orders = [
-{id:"#CDD1001",customer:"Rahul",amount:320,payment:"COD",status:"Received"},
-{id:"#CDD1002",customer:"Sneha",amount:560,payment:"UPI",status:"Preparing"},
-{id:"#CDD1003",customer:"Amit",amount:365,payment:"COD",status:"Out for Delivery"}
-];
+var orders = [];
 
 var defaultProducts = [
 {name:"Carrot Cut",category:"Fresh Cut Vegetables",image:"",p250:45,p500:80,p1000:140,status:"Available"},
@@ -305,7 +301,32 @@ async function loadProductsFromSupabase(){
 
     render();
 }
+async function loadOrdersFromSupabase(){
 
+    var { data, error } = await supabaseClient
+        .from("orders")
+        .select("*")
+        .order("id", { ascending: true });
+
+    if(error){
+        console.error("Orders load error:", error);
+        alert("Orders load failed: " + error.message);
+        return;
+    }
+
+    orders = (data || []).map(function(o){
+        return {
+            dbId: o.id,
+            id: o.order_number,
+            customer: o.customer_name,
+            amount: o.total_amount,
+            payment: o.payment_method,
+            status: o.status
+        };
+    });
+
+    render();
+}
 function saveProducts(){
 localStorage.setItem("kanadeFoodsProducts",JSON.stringify(products));
 }
@@ -390,9 +411,23 @@ orders.filter(function(o){return o.status!="Delivered";}).length;
 }
 
 
-function changeStatus(i,status){
-orders[i].status=status;
-render();
+async function changeStatus(i,status){
+
+    var order = orders[i];
+
+    var { error } = await supabaseClient
+        .from("orders")
+        .update({ status: status })
+        .eq("id", order.dbId);
+
+    if(error){
+        console.error("Order status update error:", error);
+        alert("Order status update failed: " + error.message);
+        return;
+    }
+
+    orders[i].status = status;
+    render();
 }
 
 
@@ -765,7 +800,7 @@ async function deleteProduct(i){
     }
 }
 loadProductsFromSupabase();
-
+loadOrdersFromSupabase();
 </script>
 </body>
 </html>
