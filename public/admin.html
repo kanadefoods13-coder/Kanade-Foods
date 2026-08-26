@@ -48,7 +48,25 @@ th,td{padding:8px 5px;font-size:11px}
 </head>
 
 <body>
+<script>
+window.showTab = function(id) {
+    var tabs = document.querySelectorAll(".tab");
 
+    for (var i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove("active");
+    }
+
+    var selectedTab = document.getElementById(id);
+
+    if (selectedTab) {
+        selectedTab.classList.add("active");
+    }
+
+    if (typeof render === "function") {
+        render();
+    }
+};
+</script>
 <header>
 <div class="brand">KANADE FOODS • ADMIN PANEL</div>
 <div class="tag">CHOP DROP DONE | Manage Products, Orders & Customers</div>
@@ -241,21 +259,7 @@ th,td{padding:8px 5px;font-size:11px}
 
 
 <script>
-window.showTab = function(id){
-  var tabs = document.querySelectorAll(".tab");
 
-  for(var i = 0; i < tabs.length; i++){
-    tabs[i].classList.remove("active");
-  }
-
-  var selectedTab = document.getElementById(id);
-
-  if(selectedTab){
-    selectedTab.classList.add("active");
-  }
-
-  render();
-};
 var orders = [
 {id:"#CDD1001",customer:"Rahul",amount:320,payment:"COD",status:"Received"},
 {id:"#CDD1002",customer:"Sneha",amount:560,payment:"UPI",status:"Preparing"},
