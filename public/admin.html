@@ -319,9 +319,11 @@ async function loadOrdersFromSupabase(){
             dbId: o.id,
             id: o.order_number,
             customer: o.customer_name,
+            mobile: o.mobile,
             amount: o.total_amount,
             payment: o.payment_method,
             status: o.status
+            
         };
     });
 
@@ -412,6 +414,7 @@ orders.filter(function(o){return o.status!="Delivered";}).length;
 
 
 async function changeStatus(i, status){
+    var whatsappTab = window.open("about:blank", "_blank");
 
     var order = orders[i];
 
@@ -424,16 +427,84 @@ async function changeStatus(i, status){
         .select();
 
     if(error){
-        console.error("Order status update error:", error);
-        alert("Order status update failed: " + error.message);
-        return;
+    console.error("Order status update error:", error);
+    if(whatsappTab){
+        whatsappTab.close();
     }
-
+    alert("Order status update failed: " + error.message);
+    return;
+}
     console.log("Status updated successfully:", data);
 
     orders[i].status = status;
 
     render();
+
+    // Prepare WhatsApp message
+    var mobile = String(order.mobile || "")
+        .replace(/\D/g, "");
+
+    // Convert Indian mobile number to WhatsApp format
+    if(mobile.startsWith("0")){
+        mobile = mobile.substring(1);
+    }
+
+    if(mobile.length === 10){
+        mobile = "91" + mobile;
+    }
+
+    var message = "";
+
+    if(status === "Received"){
+        message =
+        "Hello " + order.customer + ",\n\n" +
+        "Your Kanade Foods order " + order.id +
+        " has been received successfully. ✅\n\n" +
+        "Thank you for ordering with Kanade Foods - Chop Drop Done!";
+    }
+
+    else if(status === "Preparing"){
+        message =
+        "Hello " + order.customer + ",\n\n" +
+        "Your Kanade Foods order " + order.id +
+        " is now being prepared. 🥗\n\n" +
+        "Freshly cut and carefully packed!";
+    }
+
+    else if(status === "Out for Delivery"){
+        message =
+        "Hello " + order.customer + ",\n\n" +
+        "Your Kanade Foods order " + order.id +
+        " is out for delivery. 🚚\n\n" +
+        "Your order is on the way!";
+    }
+
+    else if(status === "Delivered"){
+        message =
+        "Hello " + order.customer + ",\n\n" +
+        "Your Kanade Foods order " + order.id +
+        " has been delivered successfully. 🎉\n\n" +
+        "Thank you for choosing Kanade Foods - Chop Drop Done!";
+    }
+
+    if(mobile && message){
+
+        var whatsappURL =
+            "https://wa.me/" +
+            mobile +
+            "?text=" +
+            encodeURIComponent(message);
+ if(whatsappTab){
+    whatsappTab.location.href = whatsappURL;
+}
+
+    } else {
+
+        alert(
+            "Status updated successfully, but customer mobile number was not found."
+        );
+
+    }
 }
 
 
