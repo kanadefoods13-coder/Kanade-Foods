@@ -163,32 +163,70 @@ document.querySelectorAll(".cat").forEach(b=>b.onclick=()=>{document.querySelect
 
 function unit(v){return v==="1000"?"1kg":v+"g"}
 function render(){
- const q=document.getElementById("search").value.toLowerCase();
- const list=products.filter(p=>p.cat===cat&&p.name.toLowerCase().includes(q));
- document.getElementById("resultCount").textContent=list.length+" products";
+  const q = document.getElementById("search").value.toLowerCase();
 
- document.getElementById("products").innerHTML=list.length ? list.map((p,i)=>{
-   const pi=products.indexOf(p);
-   const selected=cart.filter(x=>x.name===p.name).reduce((a,x)=>a+x.qty,0);
+  const list = products.filter(
+    p => p.cat === cat && p.name.toLowerCase().includes(q)
+  );
 
-   return `<article class="card">
-     <div class="pic">
-       ${p.image ? '<img class="product-img" src="' + p.image + '" alt="' + p.name + '">' : '<span class="emoji">' + p.emoji + '</span>'}
-     </div>
-     <div class="name">${p.name}</div>
-     <div class="desc">Freshly cut • Hygienically packed</div>
-     <select class="select" id="size${pi}" onchange="updatePrice(${pi})">
-       <option value="250">250g</option>
-       <option value="500">500g</option>
-       <option value="1000">1kg</option>
-     </select>
-     <div class="bottom">
-       <span class="price" id="price${pi}">₹${p.prices[250]}</span>
-       <button class="add" onclick="add(${pi})">Add +</button>
-     </div>
-     <div class="addedLine" id="line${pi}">${selected ? selected+" added to cart" : ""}</div>
-   </article>`;
- }).join("") : <div style="grid-column:1/-1;background:#fff;border:1px dashed #cfdcc9;border-radius:15px;padding:30px;text-align:center;color:#68756d">No products found. Try another search.</div>;
+  document.getElementById("resultCount").textContent =
+    list.length + " products";
+
+  document.getElementById("products").innerHTML = list.length
+    ? list.map((p,i) => {
+
+        const pi = products.indexOf(p);
+
+        const selected = cart
+          .filter(x => x.name === p.name)
+          .reduce((a,x) => a + x.qty, 0);
+
+        return '<article class="card">' +
+
+          '<div class="pic">' +
+            (p.image
+              ? '<img class="product-img" src="' + p.image +
+                '" alt="' + p.name + '">'
+              : '<span class="emoji">' + p.emoji + '</span>'
+            ) +
+          '</div>' +
+
+          '<div class="name">' + p.name + '</div>' +
+
+          '<div class="desc">' +
+            'Freshly cut • Hygienically packed' +
+          '</div>' +
+
+          '<select class="select" id="size' + pi +
+          '" onchange="updatePrice(' + pi + ')">' +
+
+            '<option value="250">250g</option>' +
+            '<option value="500">500g</option>' +
+            '<option value="1000">1kg</option>' +
+
+          '</select>' +
+
+          '<div class="bottom">' +
+
+            '<span class="price" id="price' + pi + '">' +
+              '₹' + p.prices[250] +
+            '</span>' +
+
+            '<button class="add" onclick="add(' + pi + ')">' +
+              'Add +' +
+            '</button>' +
+
+          '</div>' +
+
+          '<div class="addedLine" id="line' + pi + '">' +
+            (selected ? selected + ' added to cart' : '') +
+          '</div>' +
+
+        '</article>';
+
+      }).join("")
+    : "";
+
 }
 function updatePrice(pi){const p=products[pi],s=document.getElementById("size"+pi).value;document.getElementById("price"+pi).textContent="₹"+p.prices[s]}
 function add(pi){const p=products[pi],s=document.getElementById("size"+pi).value,e=cart.find(x=>x.name===p.name&&x.size===s);if(e)e.qty++;else cart.push({name:p.name,size:s,price:p.prices[s],qty:1});updateCart();const b=document.getElementById("badge"+pi),l=document.getElementById("line"+pi),n=cart.filter(x=>x.name===p.name).reduce((a,x)=>a+x.qty,0);if(b){b.textContent=n+" added";b.classList.add("show");l.textContent=n+" added to cart"}}
