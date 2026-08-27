@@ -95,42 +95,52 @@ footer{background:#083d1d;color:#eaf6e8;padding:30px 18px}.foot{max-width:1180px
 <footer><div class="foot"><div><strong>KANADE FOODS</strong><small>Freshly cut • Carefully packed • Delivered with care</small></div><div><strong>Mulund Delivery</strong><small>WhatsApp: 8104130330</small></div></div></footer>
 
 <script>
-const products=[
-{name:"Carrot Cut",cat:"Vegetables",emoji:"🥕",prices:{250:45,500:80,1000:140}},
-{name:"Mixed Veggies",cat:"Vegetables",emoji:"🥦",prices:{250:55,500:100,1000:180}},
-{name:"Capsicum Cut",cat:"Vegetables",emoji:"🫑",prices:{250:60,500:110,1000:200}},
-{name:"Gawar",cat:"Vegetables",emoji:"🌿",prices:{250:45,500:85,1000:150}},
-{name:"Bhendi",cat:"Vegetables",emoji:"🥒",prices:{250:45,500:85,1000:150}},
-{name:"Karle",cat:"Vegetables",emoji:"🥒",prices:{250:50,500:90,1000:160}},
-{name:"Corn",cat:"Vegetables",emoji:"🌽",prices:{250:55,500:100,1000:180}},
-{name:"Shimla Mirchi",cat:"Vegetables",emoji:"🫑",prices:{250:60,500:110,1000:200}},
-{name:"Tendli",cat:"Vegetables",emoji:"🥒",prices:{250:55,500:100,1000:180}},
-{name:"Vatana",cat:"Vegetables",emoji:"🫛",prices:{250:50,500:90,1000:160}},
-{name:"Suran",cat:"Vegetables",emoji:"🥔",prices:{250:55,500:100,1000:180}},
-{name:"Dodka",cat:"Vegetables",emoji:"🥒",prices:{250:50,500:90,1000:160}},
-{name:"Flower Kobi",cat:"Vegetables",emoji:"🥦",prices:{250:45,500:85,1000:150}},
-{name:"Pineapple Cut",cat:"Fruits",emoji:"🍍",prices:{250:70,500:125,1000:220}},
-{name:"Watermelon Cut",cat:"Fruits",emoji:"🍉",prices:{250:45,500:80,1000:140}},
-{name:"Mixed Fruit",cat:"Fruits",emoji:"🍓",prices:{250:80,500:150,1000:280}},
-{name:"Apple",cat:"Fruits",emoji:"🍎",prices:{250:65,500:120,1000:220}},
-{name:"Banana",cat:"Fruits",emoji:"🍌",prices:{250:35,500:60,1000:110}},
-{name:"Papaya",cat:"Fruits",emoji:"🍈",prices:{250:40,500:70,1000:125}},
-{name:"Pomegranate",cat:"Fruits",emoji:"❤️",prices:{250:75,500:140,1000:260}},
-{name:"Mango",cat:"Fruits",emoji:"🥭",prices:{250:70,500:130,1000:240}},
-{name:"Orange",cat:"Fruits",emoji:"🍊",prices:{250:50,500:90,1000:165}},
-{name:"Guava",cat:"Fruits",emoji:"🍐",prices:{250:45,500:80,1000:145}},
-{name:"Muskmelon",cat:"Fruits",emoji:"🍈",prices:{250:40,500:75,1000:135}},
-{name:"Pav Bhaji Mix",cat:"Ready",emoji:"🥘",prices:{250:50,500:90,1000:165}},
-{name:"Pulav Mix",cat:"Ready",emoji:"🍚",prices:{250:55,500:95,1000:175}},
-{name:"Chinese Mix",cat:"Ready",emoji:"🥡",prices:{250:60,500:100,1000:185}},
-{name:"Salad Mix",cat:"Ready",emoji:"🥗",prices:{250:45,500:75,1000:140}},
-{name:"Mixed Vegetables",cat:"Ready",emoji:"🥦",prices:{250:50,500:85,1000:155}},
-{name:"Moong Sprouts",cat:"Sprouts",emoji:"🌱",prices:{250:45,500:85,1000:150}},
-{name:"Matki Sprouts",cat:"Sprouts",emoji:"🌱",prices:{250:45,500:85,1000:150}},
-{name:"Channa Sprouts",cat:"Sprouts",emoji:"🌱",prices:{250:50,500:90,1000:160}},
-{name:"Cholle Sprouts",cat:"Sprouts",emoji:"🌱",prices:{250:55,500:100,1000:180}},
-{name:"Mixed Sprouts",cat:"Sprouts",emoji:"🥗",prices:{250:55,500:100,1000:180}}
-];
+let products = [];
+async function loadProductsFromSupabase(){
+
+    const { data, error } = await supabaseClient
+        .from("products")
+        .select("*")
+        .order("id", { ascending: true });
+
+    if(error){
+        console.error("Products load error:", error);
+        alert("Products load failed: " + error.message);
+        return;
+    }
+
+    products = (data || []).map(function(p){
+
+        let cat = "Vegetables";
+
+        if(p.category === "Fresh Cut Fruits"){
+            cat = "Fruits";
+        }
+        else if(p.category === "Ready-to-Cook Mixes"){
+            cat = "Ready";
+        }
+        else if(p.category === "Fresh Sprouts"){
+            cat = "Sprouts";
+        }
+
+        return {
+            id: p.id,
+            name: p.name,
+            cat: cat,
+            emoji: p.image_url || "",
+            image: p.image_url || "",
+            prices: {
+                250: Number(p.price_250g) || 0,
+                500: Number(p.price_500g) || 0,
+                1000: Number(p.price_1kg) || 0
+            },
+            status: p.status || "Available"
+        };
+
+    });
+
+    render();
+}
 let cat="Vegetables",cart=[];
 
 document.querySelectorAll(".cat").forEach(b=>b.onclick=()=>{document.querySelectorAll(".cat").forEach(x=>x.classList.remove("active"));b.classList.add("active");cat=b.dataset.cat;document.getElementById("sectionTitle").textContent=b.textContent.replace(/🥦|🍎|🥗|🌱/g,"").trim();render()});
@@ -296,6 +306,7 @@ Address: ${a}`;
     );
 }
 render();updateCart();
+loadProductsFromSupabase();
 </script>
 </body>
 </html>
