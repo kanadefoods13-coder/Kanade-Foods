@@ -163,6 +163,7 @@ document.querySelectorAll(".cat").forEach(b=>b.onclick=()=>{document.querySelect
 
 function unit(v){return v==="1000"?"1kg":v+"g"}
 function render(){
+
   const q = document.getElementById("search").value.toLowerCase();
 
   const list = products.filter(
@@ -173,65 +174,185 @@ function render(){
     list.length + " products";
 
   document.getElementById("products").innerHTML = list.length
-    ? list.map((p,i) => {
+    ? list.map((p, i) => {
 
         const pi = products.indexOf(p);
 
-        const selected = cart
+        const totalSelected = cart
           .filter(x => x.name === p.name)
-          .reduce((a,x) => a + x.qty, 0);
+          .reduce((a, x) => a + x.qty, 0);
 
-        return '<article class="card">' +
+        const sizes = [
+          { value: "250", label: "250g" },
+          { value: "500", label: "500g" },
+          { value: "1000", label: "1kg" }
+        ];
 
-          '<div class="pic">' +
-            (p.image
-              ? '<img class="product-img" src="' + p.image +
-                '" alt="' + p.name + '">'
-              : '<span class="emoji">' + p.emoji + '</span>'
-            ) +
-          '</div>' +
+        const addedSizes = sizes.map(s => {
 
-          '<div class="name">' + p.name + '</div>' +
+          const item = cart.find(
+            x => x.name === p.name && x.size === s.value
+          );
 
-          '<div class="desc">' +
-            'Freshly cut • Hygienically packed' +
-          '</div>' +
+          if (!item) return "";
 
-          '<select class="select" id="size' + pi +
-          '" onchange="updatePrice(' + pi + ')">' +
-            '<option value="250">250g</option>' +
-            '<option value="500">500g</option>' +
-            '<option value="1000">1kg</option>' +
-          '</select>' +
+          return `
+            <div class="addedSizeRow">
+              <span>${s.label}</span>
 
-          '<div class="bottom">' +
+              <span class="addedSizePrice">
+                ₹${item.price}
+              </span>
 
-            '<span class="price" id="price' + pi + '">' +
-              '₹' + p.prices[250] +
-            '</span>' +
+              <div class="qty">
+                <button
+                  type="button"
+                  onclick="changeProductQty(${pi}, -1, '${s.value}')"
+                >−</button>
 
-            (
-              selected > 0
-              ? '<div class="qty">' +
-                  '<button onclick="changeProductQty(' + pi + ',-1)">−</button>' +
-                  '<span>' + selected + '</span>' +
-                  '<button onclick="changeProductQty(' + pi + ',1)">+</button>' +
-                '</div>'
-              : '<button class="add" onclick="add(' + pi + ')">Add +</button>'
-            ) +
+                <span>${item.qty}</span>
 
-          '</div>' +
+                <button
+                  type="button"
+                  onclick="changeProductQty(${pi}, 1, '${s.value}')"
+                >+</button>
+              </div>
+            </div>
+          `;
+        }).join("");
 
-          '<div class="addedLine" id="line' + pi + '">' +
-            (selected ? '✓ ' + selected + ' added to cart' : '') +
-          '</div>' +
+        return `
+          <article class="card">
 
-        '</article>';
+          <div class="pic">
+  ${
+    p.image
+      ? `<img
+          class="product-img"
+          src="${p.image}"
+          alt="${p.name}"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"
+        >
+        <span
+          class="emoji"
+          style="display:none"
+        >${p.emoji || "🥦"}</span>`
+      : <span class="emoji">${p.emoji || "🥦"}</span>
+  }
+</div>
+            <div class="name">${p.name}</div>
+
+            <div class="desc">
+              Freshly cut • Hygienically packed
+            </div>
+
+            <select
+              class="select"
+              id="size${pi}"
+              onchange="updatePrice(${pi})"
+            >
+              <option value="250">250g</option>
+              <option value="500">500g</option>
+              <option value="1000">1kg</option>
+            </select>
+
+            <div class="bottom">
+
+              <span class="price" id="price${pi}">
+                ₹${p.prices[250]}
+              </span>
+
+              <button
+                type="button"
+                class="add"
+                onclick="add(${pi})"
+              >
+                Add +
+              </button>
+
+            </div>
+
+            ${
+              totalSelected > 0
+                ? `
+                  <div class="addedLine">
+                    ✓ ${totalSelected} added to cart
+                  </div>
+
+                  <div class="addedSizes">
+                    ${addedSizes}
+                  </div>
+                `
+                : ""
+            }
+
+          </article>
+        `;
 
       }).join("")
-    : "";
+    : `
+      <div
+        style="
+          grid-column:1/-1;
+          background:#fff;
+          border:1px dashed #cfdcc9;
+          border-radius:15px;
+          padding:30px;
+          text-align:center;
+          color:#68756d;
+        "
+      >
+        No products found. Try another search.
+      </div>
+    `;
 }
-function changeProductQty(pi, d){
+function changeProductQty(pi, d, size){
+
+  const p = products[pi];
+
+  let item = cart.find(
+    x => x.name === p.name && x.size === size
+  );
+
+  if(d > 0){
+
+    if(item){
+
+      item.qty++;
+
+    }else{
+
+      cart.push({
+        name: p.name,
+        size: size,
+        price: p.prices[size],
+        qty: 1
+      });
+
+    }
+
+  }else{
+
+    if(item){
+
+      item.qty--;
+
+      if(item.qty <= 0){
+
+        const index = cart.indexOf(item);
+        cart.splice(index, 1);
+
+      }
+
+    }
+
+  }
+
+  updateCart();
+  render();
+}
+function updatePrice(pi){const p=products[pi],s=document.getElementById("size"+pi).value;document.getElementById("price"+pi).textContent="₹"+p.prices[s]}
+function add(pi){
 
   const p = products[pi];
 
@@ -243,39 +364,24 @@ function changeProductQty(pi, d){
     x => x.name === p.name && x.size === size
   );
 
-  if(d > 0){
+  if(item){
 
-    if(item){
-      item.qty++;
-    }else{
-      cart.push({
-        name: p.name,
-        size: size,
-        price: p.prices[size],
-        qty: 1
-      });
-    }
+    item.qty++;
 
   }else{
 
-    if(item){
-
-      item.qty--;
-
-      if(item.qty <= 0){
-        const index = cart.indexOf(item);
-        cart.splice(index,1);
-      }
-
-    }
+    cart.push({
+      name: p.name,
+      size: size,
+      price: p.prices[size],
+      qty: 1
+    });
 
   }
 
   updateCart();
   render();
 }
-function updatePrice(pi){const p=products[pi],s=document.getElementById("size"+pi).value;document.getElementById("price"+pi).textContent="₹"+p.prices[s]}
-function add(pi){const p=products[pi],s=document.getElementById("size"+pi).value,e=cart.find(x=>x.name===p.name&&x.size===s);if(e)e.qty++;else cart.push({name:p.name,size:s,price:p.prices[s],qty:1});updateCart();const b=document.getElementById("badge"+pi),l=document.getElementById("line"+pi),n=cart.filter(x=>x.name===p.name).reduce((a,x)=>a+x.qty,0);if(b){b.textContent=n+" added";b.classList.add("show");l.textContent=n+" added to cart"}}
 function qty(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updateCart();render()}
 function remove(i){cart.splice(i,1);updateCart();render()}
 function updateCart(){
