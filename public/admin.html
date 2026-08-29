@@ -799,10 +799,19 @@ if(!productId){
 var result = await supabaseClient
     .from("products")
     .update(updateData)
-    .eq("id", productId);
+    .eq("id", productId)
+    .select();
 
 if(result.error){
-    throw result.error;
+    console.error("PRODUCT UPDATE FULL ERROR:", result.error);
+    alert(
+      "Product update failed:\n\n" +
+      "Code: " + result.error.code + "\n" +
+      "Message: " + result.error.message + "\n" +
+      "Details: " + result.error.details + "\n" +
+      "Hint: " + result.error.hint
+    );
+    return;
 }
 
     /* =========================
