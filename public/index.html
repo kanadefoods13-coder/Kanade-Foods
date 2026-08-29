@@ -157,6 +157,25 @@ async function loadProductsFromSupabase(){
 
     render();
 }
+// =========================
+// LIVE PRODUCT UPDATES
+// =========================
+
+supabaseClient
+  .channel("products-live")
+  .on(
+    "postgres_changes",
+    {
+      event: "*",
+      schema: "public",
+      table: "products"
+    },
+    function(payload) {
+      console.log("Product changed:", payload);
+      loadProductsFromSupabase();
+    }
+  )
+  .subscribe();
 let cat="Vegetables",cart=[];
 
 document.querySelectorAll(".cat").forEach(b=>b.onclick=()=>{document.querySelectorAll(".cat").forEach(x=>x.classList.remove("active"));b.classList.add("active");cat=b.dataset.cat;document.getElementById("sectionTitle").textContent=b.textContent.replace(/🥦|🍎|🥗|🌱/g,"").trim();render()});
