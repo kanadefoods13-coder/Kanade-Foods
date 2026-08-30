@@ -659,7 +659,7 @@ function render(){
     list.length + " products";
 
   document.getElementById("products").innerHTML = list.length
-    ? list.map((p, i) => {
+    ? list.map((p) => {
 
         const pi = products.indexOf(p);
 
@@ -704,30 +704,33 @@ function render(){
               </div>
             </div>
           `;
+
         }).join("");
 
         return `
           <article class="card">
 
-        div
-  class="pic"
-  onclick="openProductPopup(${pi})"
->
-  ${
-    p.image
-      ? `<img
-          class="product-img"
-          src="${p.image}"
-          alt="${p.name}"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"
-        >
-        <span
-          class="emoji"
-          style="display:none"
-        >${p.emoji || "🥦"}</span>`
-      : <span class="emoji">${p.emoji || "🥦"}</span>
-  }
-</div>
+            <div
+              class="pic"
+              onclick="openProductPopup(${pi})"
+              style="cursor:pointer"
+            >
+              ${
+                p.image
+                  ? `<img
+                      class="product-img"
+                      src="${p.image}"
+                      alt="${p.name}"
+                      onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"
+                    >
+                    <span
+                      class="emoji"
+                      style="display:none"
+                    >${p.emoji || "🥦"}</span>`
+                  : <span class="emoji">${p.emoji || "🥦"}</span>
+              }
+            </div>
+
             <div class="name">${p.name}</div>
 
             <div class="desc">
