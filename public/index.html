@@ -227,9 +227,183 @@ footer{background:#083d1d;color:#eaf6e8;padding:30px 18px}.foot{max-width:1180px
     height:250px;
   }
 }
+.product-popup{
+  position:fixed;
+  inset:0;
+  background:#0008;
+  z-index:500;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.product-popup.open{
+  display:flex;
+}
+
+.product-popup-box{
+  width:min(430px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:22px;
+  padding:20px;
+  position:relative;
+  box-shadow:0 25px 70px #0005;
+}
+
+.popup-close{
+  position:absolute;
+  right:12px;
+  top:12px;
+  border:0;
+  background:#eef5ec;
+  color:#16351f;
+  border-radius:50%;
+  width:36px;
+  height:36px;
+  font-size:18px;
+  font-weight:900;
+  z-index:2;
+}
+
+.popup-product-image{
+  width:100%;
+  height:280px;
+  object-fit:contain;
+  background:#f7faf6;
+  border-radius:16px;
+  display:block;
+}
+
+#popupProductName{
+  margin:15px 0 8px;
+  color:var(--g);
+}
+
+.popup-label{
+  font-size:12px;
+  font-weight:900;
+  margin-top:10px;
+  color:var(--muted);
+}
+
+.popup-price{
+  font-size:22px;
+  font-weight:950;
+  color:var(--g);
+  margin:12px 0;
+}
+
+.popup-qty{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:8px 0 14px;
+}
+
+.popup-qty button{
+  border:0;
+  background:#eaf5e8;
+  color:var(--g);
+  border-radius:9px;
+  width:42px;
+  height:42px;
+  font-size:22px;
+  font-weight:900;
+}
+
+.popup-qty input{
+  width:70px;
+  height:42px;
+  text-align:center;
+  border:1px solid #dbe6d8;
+  border-radius:9px;
+}
+
+.popup-add{
+  width:100%;
+}
 </style>
 </head>
 <body>
+  <!-- PRODUCT POPUP -->
+<div id="productPopup" class="product-popup" onclick="closeProductPopup(event)">
+
+  <div class="product-popup-box">
+
+    <button
+      type="button"
+      class="popup-close"
+      onclick="closeProductPopup()"
+    >✕</button>
+
+    <img
+      id="popupProductImage"
+      class="popup-product-image"
+      src=""
+      alt="Product"
+    >
+
+    <h2 id="popupProductName">Product Name</h2>
+
+    <div class="popup-label">
+      Select Size
+    </div>
+
+    <select
+      id="popupSize"
+      class="select"
+      onchange="updatePopupPrice()"
+    >
+      <option value="250">250g</option>
+      <option value="500">500g</option>
+      <option value="1000">1kg</option>
+    </select>
+
+    <div class="popup-price">
+      ₹<span id="popupPrice">0</span>
+    </div>
+
+    <div class="popup-label">
+      Select Quantity
+    </div>
+
+    <div class="popup-qty">
+
+      <button
+        type="button"
+        onclick="changePopupQty(-1)"
+      >−</button>
+
+      <input
+        id="popupQty"
+        type="number"
+        min="1"
+        value="1"
+        onchange="validatePopupQty()"
+      >
+
+      <button
+        type="button"
+        onclick="changePopupQty(1)"
+      >+</button>
+
+    </div>
+
+    <button
+      type="button"
+      class="add popup-add"
+      onclick="addFromPopup()"
+    >
+      Add to Cart +
+    </button>
+
+  </div>
+
+</div>
+<!-- END PRODUCT POPUP -->
 <div class="top">🚚 Delivering in <b>Mulund only</b> • Freshly Cut • Hygienically Packed • Ready to Cook</div>
 <header><div class="nav">
 <img class="logo" src="/kanade-foods-logo-v3.jpg" alt="Kanade Foods">
@@ -395,7 +569,48 @@ footer{background:#083d1d;color:#eaf6e8;padding:30px 18px}.foot{max-width:1180px
 
 </div>
 <footer><div class="foot"><div><strong>KANADE FOODS</strong><small>Freshly cut • Carefully packed • Delivered with care</small></div><div><strong>Mulund Delivery</strong><small>WhatsApp: 8104130330</small></div></div></footer>
+<div id="productPopup" class="product-popup">
 
+  <div class="product-popup-box">
+
+    <button class="popup-close" onclick="closeProductPopup()">✕</button>
+
+    <img id="popupProductImage" class="popup-product-image">
+
+    <h2 id="popupProductName"></h2>
+
+    <div class="popup-label">Type</div>
+
+    <select id="popupType" class="field">
+      <option value="Whole">Whole</option>
+      <option value="Chop">Chop</option>
+    </select>
+
+    <div class="popup-label">Size</div>
+
+    <select id="popupSize" class="field">
+      <option value="250">250g</option>
+      <option value="500">500g</option>
+      <option value="1000">1kg</option>
+    </select>
+
+    <div class="popup-price" id="popupProductPrice">₹0</div>
+
+    <div class="popup-label">Quantity</div>
+
+    <div class="popup-qty">
+      <button id="popupMinus">−</button>
+      <input id="popupQty" type="number" value="1" min="1">
+      <button id="popupPlus">+</button>
+    </div>
+
+    <button id="popupAdd" class="primary popup-add">
+      Add to Cart 🛒
+    </button>
+
+  </div>
+
+</div>
 <script>
 let products = [];
 async function loadProductsFromSupabase(){
@@ -647,6 +862,129 @@ function addFromPopup(){
     ") added to cart."
   );
 }
+
+
+function openProductPopup(pi){
+
+  popupProductIndex = pi;
+
+  const p = products[pi];
+
+  document.getElementById("popupProductName").textContent = p.name;
+
+  const img = document.getElementById("popupProductImage");
+
+  if(p.image){
+    img.src = p.image;
+    img.style.display = "block";
+  }else{
+    img.src = "";
+    img.style.display = "none";
+  }
+
+  document.getElementById("popupSize").value = "250";
+  document.getElementById("popupQty").value = 1;
+
+  updatePopupPrice();
+
+  document.getElementById("productPopup").classList.add("open");
+}
+
+
+function closeProductPopup(event){
+
+  if(event && event.target !== event.currentTarget){
+    return;
+  }
+
+  document.getElementById("productPopup").classList.remove("open");
+
+  popupProductIndex = null;
+}
+
+
+function updatePopupPrice(){
+
+  if(popupProductIndex === null) return;
+
+  const p = products[popupProductIndex];
+
+  const size = document.getElementById("popupSize").value;
+
+  document.getElementById("popupPrice").textContent =
+    p.prices[size];
+}
+
+
+function changePopupQty(change){
+
+  const input = document.getElementById("popupQty");
+
+  let qty = Number(input.value) || 1;
+
+  qty += change;
+
+  if(qty < 1){
+    qty = 1;
+  }
+
+  input.value = qty;
+}
+
+
+function validatePopupQty(){
+
+  const input = document.getElementById("popupQty");
+
+  let qty = Number(input.value) || 1;
+
+  if(qty < 1){
+    qty = 1;
+  }
+
+  input.value = qty;
+}
+
+
+function addFromPopup(){
+
+  if(popupProductIndex === null) return;
+
+  const p = products[popupProductIndex];
+
+  const size =
+    document.getElementById("popupSize").value;
+
+  const qty =
+    Number(document.getElementById("popupQty").value) || 1;
+
+  const item = cart.find(
+    x => x.name === p.name && x.size === size
+  );
+
+  if(item){
+
+    item.qty += qty;
+
+  }else{
+
+    cart.push({
+      name: p.name,
+      size: size,
+      price: p.prices[size],
+      qty: qty
+    });
+
+  }
+
+  updateCart();
+  render();
+
+  document.getElementById("productPopup")
+    .classList.remove("open");
+
+  popupProductIndex = null;
+}
 function render(){
 
   const q = document.getElementById("search").value.toLowerCase();
@@ -727,7 +1065,7 @@ function render(){
                       class="emoji"
                       style="display:none"
                     >${p.emoji || "🥦"}</span>`
-                  : <span class="emoji">${p.emoji || "🥦"}</span>
+                  : `<span class="emoji">${p.emoji || "🥦"}</span>`
               }
             </div>
 
@@ -796,6 +1134,74 @@ function render(){
         No products found. Try another search.
       </div>
     `;
+}
+function openProductPopup(pi){
+
+  const p = products[pi];
+
+  const popup = document.getElementById("productPopup");
+  const img = document.getElementById("popupProductImage");
+  const name = document.getElementById("popupProductName");
+  const price = document.getElementById("popupProductPrice");
+  const size = document.getElementById("popupSize");
+  const qtyEl = document.getElementById("popupQty");
+
+  img.src = p.image || "";
+  name.textContent = p.name;
+  qtyEl.value = 1;
+
+  function updatePopupPrice(){
+    price.textContent = "₹" + p.prices[size.value];
+  }
+
+  size.onchange = updatePopupPrice;
+  updatePopupPrice();
+
+  document.getElementById("popupType").value = "Chop";
+
+  popup.classList.add("open");
+
+  document.getElementById("popupMinus").onclick = function(){
+    let q = Number(qtyEl.value);
+    if(q > 1) qtyEl.value = q - 1;
+  };
+
+  document.getElementById("popupPlus").onclick = function(){
+    qtyEl.value = Number(qtyEl.value) + 1;
+  };
+
+  document.getElementById("popupAdd").onclick = function(){
+
+    const selectedSize = size.value;
+    const selectedQty = Number(qtyEl.value);
+    const selectedType = document.getElementById("popupType").value;
+
+    const item = cart.find(
+      x => x.name === p.name &&
+           x.size === selectedSize &&
+           x.type === selectedType
+    );
+
+    if(item){
+      item.qty += selectedQty;
+    }else{
+      cart.push({
+        name: p.name,
+        size: selectedSize,
+        price: p.prices[selectedSize],
+        qty: selectedQty,
+        type: selectedType
+      });
+    }
+
+    updateCart();
+    render();
+    popup.classList.remove("open");
+  };
+}
+
+function closeProductPopup(){
+  document.getElementById("productPopup").classList.remove("open");
 }
 function changeProductQty(pi, d, size){
 
