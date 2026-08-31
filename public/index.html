@@ -958,6 +958,42 @@
       }
 
     }
+    /* OUT OF STOCK */
+.card.out-stock{
+  opacity:.68;
+}
+
+.card.out-stock .pic{
+  filter:grayscale(.75);
+  cursor:not-allowed;
+}
+
+.out-stock-overlay{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.35);
+  border-radius:14px;
+  z-index:2;
+}
+
+.out-stock-overlay span{
+  background:#fff;
+  color:#c0392b;
+  padding:9px 16px;
+  border-radius:9px;
+  font-size:13px;
+  font-weight:950;
+  letter-spacing:.5px;
+}
+
+.tap-choice{
+  font-size:11px;
+  font-weight:800;
+  color:#68756d;
+}
 
   </style>
 </head>
@@ -2059,79 +2095,168 @@
       closeProductPopup();
 
 
-      /* Small confirmation */
-
-      alert(
-        p.name +
-        " (" +
-        popupType +
-        ", " +
-        unit(size) +
-        ") added to cart."
-      );
-
-    }
+     
 
 
     /* =====================================================
        RENDER PRODUCTS
     ====================================================== */
 
-    function render(){
+  function render(){
 
-      const searchInput =
-        document.getElementById("search");
+  const q = document
+    .getElementById("search")
+    .value
+    .toLowerCase()
+    .trim();
 
+  const list = products.filter(
+    p =>
+      p.cat === cat &&
+      p.name.toLowerCase().includes(q)
+  );
 
-      const q =
-        searchInput
-          ? searchInput.value.toLowerCase().trim()
-          : "";
+  document.getElementById("resultCount").textContent =
+    list.length + " products";
 
+  document.getElementById("products").innerHTML =
+    list.length
+      ? list.map(function(p){
 
-      const list =
-        products.filter(function(p){
+          const pi = products.indexOf(p);
 
-          return (
-            p.cat === cat &&
-            p.name.toLowerCase().includes(q)
-          );
+          const isOut =
+            String(p.status || "")
+              .toLowerCase()
+              .trim() === "out of stock";
 
-        });
+          const totalSelected = cart
+            .filter(function(x){
+              return x.name === p.name;
+            })
+            .reduce(function(total, x){
+              return total + x.qty;
+            }, 0);
 
+          return `
+            <article class="card ${isOut ? "out-stock" : ""}">
 
-      document
-        .getElementById("resultCount")
-        .textContent =
-          list.length + " products";
+              <div
+                class="pic"
+                ${
+                  isOut
+                    ? ""
+                    : onclick="openProductPopup(${pi})"
+                }
+              >
 
+                ${
+                  p.image
+                    ? `
+                      <img
+                        class="product-img"
+                        src="${p.image}"
+                        alt="${p.name}"
+                        onerror="
+                          this.onerror=null;
+                          this.style.display='none';
+                          this.nextElementSibling.style.display='inline';
+                        "
+                      >
 
-      const productsBox =
-        document.getElementById("products");
+                      <span
+                        class="emoji"
+                        style="display:none"
+                      >
+                        ${p.emoji || "🥦"}
+                      </span>
+                    `
+                    : `
+                      <span class="emoji">
+                        ${p.emoji || "🥦"}
+                      </span>
+                    `
+                }
 
+                ${
+                  isOut
+                    ? `
+                      <div class="out-stock-overlay">
+                        <span>OUT OF STOCK</span>
+                      </div>
+                    `
+                    : ""
+                }
 
-      if(!list.length){
+              </div>
 
-        productsBox.innerHTML = `
-          <div
-            style="
-              grid-column:1/-1;
-              background:#fff;
-              border:1px dashed #cfdcc9;
-              border-radius:15px;
-              padding:30px;
-              text-align:center;
-              color:#68756d;
-            "
-          >
-            No products found.
-            Try another search.
-          </div>
-        `;
+              <div class="name">
+                ${p.name}
+              </div>
 
-        return;
+              <div class="desc">
+                Freshly cut • Hygienically packed
+              </div>
 
-      }
+              <div class="bottom">
+
+                <span class="price">
+                  ₹${p.prices[250]}
+                </span>
+
+                ${
+                  isOut
+                    ? `
+                      <span
+                        style="
+                          color:#c0392b;
+                          font-size:11px;
+                          font-weight:900;
+                        "
+                      >
+                        Out of Stock
+                      </span>
+                    `
+                    : `
+                      <span class="tap-choice">
+                        Tap to choose
+                      </span>
+                    `
+                }
+
+              </div>
+
+              ${
+                totalSelected > 0 && !isOut
+                  ? `
+                    <div class="addedLine">
+                      ✓ ${totalSelected} added to cart
+                    </div>
+                  `
+                  : ""
+              }
+
+            </article>
+          `;
+
+        }).join("")
+
+      : `
+        <div
+          style="
+            grid-column:1/-1;
+            background:#fff;
+            border:1px dashed #cfdcc9;
+            border-radius:15px;
+            padding:30px;
+            text-align:center;
+            color:#68756d;
+          "
+        >
+          No products found. Try another search.
+        </div>
+      `;
+}
 
 
       productsBox.innerHTML =
