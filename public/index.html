@@ -146,10 +146,23 @@ async function loadProductsFromSupabase(){
       emoji:p.category==="Fresh Cut Fruits"?"🍎":p.category==="Fresh Sprouts"?"🌱":p.category==="Ready-to-Cook Mixes"?"🥗":"🥦",
       image:p.image_url||"",
       prices:{
-        Whole:{250:Number(p.whole_price_250g)||old250,500:Number(p.whole_price_500g)||old500,1000:Number(p.whole_price_1kg)||old1000},
-        Chopped:{250:Number(p.chop_price_250g)||0,500:Number(p.chop_price_500g)||0,1000:Number(p.chop_price_1kg)||0}
-      },
-      status:p.status||"Available"
+  Whole:{
+    250:Number(p.whole_price_250g)||old250,
+    500:Number(p.whole_price_500g)||old500,
+    1000:Number(p.whole_price_1kg)||old1000
+  },
+  Chopped:{
+    250:Number(p.chop_price_250g)||0,
+    500:Number(p.chop_price_500g)||0,
+    1000:Number(p.chop_price_1kg)||0
+  }
+},
+cost:{
+  250:Number(p.cost_250g)||0,
+  500:Number(p.cost_500g)||0,
+  1000:Number(p.cost_1kg)||0
+},
+status:p.status||"Available"
     };
   });
   render();
@@ -244,8 +257,19 @@ function addFromPopup(){
   const price=getPrice(p,popupType,size);
   if(price<=0){alert("This "+popupType+" price is not set yet. Please try another option.");return;}
   const item=cart.find(x=>x.productId===p.id&&x.size===size&&x.type===popupType);
-  if(item)item.qty+=popupQuantity;
-  else cart.push({productId:p.id,name:p.name,size:size,type:popupType,price:price,qty:popupQuantity});
+ if(item){
+  item.qty+=popupQuantity;
+  item.cost=Number(p.cost[size])||0;
+}
+ else cart.push({
+  productId:p.id,
+  name:p.name,
+  size:size,
+  type:popupType,
+  price:price,
+  cost:Number(p.cost[size])||0,
+  qty:popupQuantity
+});
   updateCart();render();closeProductPopup();
 }
 
@@ -277,16 +301,103 @@ async function trackOrder(){
 }
 
 async function whatsapp(){
-  if(!cart.length){alert("Please add a product first.");return;}
-  const name=document.getElementById("name").value.trim(),phone=document.getElementById("phone").value.trim(),address=document.getElementById("address").value.trim();
-  if(!name||!phone||!address){alert("Please fill your name, mobile number and Mulund delivery address.");return;}
-  const subtotal=cart.reduce((t,x)=>t+x.price*x.qty,0),delivery=subtotal>=499?0:40,total=subtotal+delivery,payment=document.getElementById("pay").value;
+  if(!cart.length){
+    alert("Please add a product first.");
+    return;
+  }
+
+  const name=document.getElementById("name").value.trim();
+  const phone=document.getElementById("phone").value.trim();
+  const address=document.getElementById("address").value.trim();
+
+  if(!name||!phone||!address){
+    alert("Please fill your name, mobile number and Mulund delivery address.");
+    return;
+  }
+
+  const subtotal=cart.reduce((t,x)=>t+x.price*x.qty,0);
+  const delivery=subtotal>=499?0:40;
+  const total=subtotal+delivery;
+  const payment=document.getElementById("pay").value;
+
   const orderNumber="CDD"+Date.now().toString().slice(-6);
-  const orderItems=cart.map(x=>({name:x.name,type:x.type||"Whole",size:unit(x.size),quantity:x.qty,price:x.price}));
-  const {error}=await supabaseClient.from("orders").insert([{order_number:orderNumber,customer_name:name,mobile:phone,address:address,area:"Mulund",items:orderItems,total_amount:total,payment_method:payment,status:"Pending"}]);
-  if(error){console.error(error);alert("Order could not be placed. Please try again.");return;}
-  const lines=cart.map(x=>x.name+" - "+(x.type||"Whole")+" - "+unit(x.size)+" x "+x.qty+" = ₹"+(x.price*x.qty)).join("\n");
-  const message=`Hello Kanade Foods - Chop Drop Done!
+
+  /*
+    IMPORTANT:
+    Save exact prices + cost at the time of order.
+    Future price changes will NOT affect old orders.
+  */
+
+  const orderItems=cart.map(x=>({
+    product_id:x.productId,
+    name:x.name,
+    type:x.type||"Whole",
+    size:unit(x.size),
+    quantity:x.qty,
+    selling_price:Number(x.price)||0,
+    cost_price:Number(x.cost)||0,
+    line_total:Number(x.price*x.qty)||0,
+    line_cost:Number((x.cost||0)*x.qty)||0,
+    line_profit:Number((x.price-x.cost)*x.qty)||0
+  }));
+
+  const totalCost=orderItems.reduce(
+    (t,x)=>t+x.line_cost,
+    0
+  );
+
+  const profitAmount=subtotal-totalCost;
+
+  /*
+    Snapshot is a permanent record of what was sold.
+  */
+
+  const {error}=await supabaseClient
+    .from("orders")
+    .insert([{
+      order_number:orderNumber,
+      customer_name:name,
+      mobile:phone,
+      address:address,
+      area:"Mulund",
+
+      items:orderItems,
+
+      items_snapshot:orderItems,
+
+      total_amount:total,
+
+      payment_method:payment,
+      payment_status:"Pending",
+
+      delivery_charge:delivery,
+
+      total_cost:totalCost,
+      profit_amount:profitAmount,
+
+      status:"Pending"
+    }]);
+
+  if(error){
+    console.error("Order insert error:",error);
+    alert("Order could not be placed. Please try again.");
+    return;
+  }
+
+  const lines=cart.map(x=>
+    x.name+
+    " - "+
+    (x.type||"Whole")+
+    " - "+
+    unit(x.size)+
+    " x "+
+    x.qty+
+    " = ₹"+
+    (x.price*x.qty)
+  ).join("\n");
+
+  const message=
+`Hello Kanade Foods - Chop Drop Done!
 
 Order No: ${orderNumber}
 
@@ -302,8 +413,24 @@ Customer: ${name}
 Mobile: ${phone}
 Delivery Area: Mulund
 Address: ${address}`;
-  alert("Order placed successfully! Order No: "+orderNumber);
-  window.open("https://wa.me/918104130330?text="+encodeURIComponent(message),"_blank");
+
+  alert(
+    "Order placed successfully!\nOrder No: "+
+    orderNumber
+  );
+
+  window.open(
+    "https://wa.me/918104130330?text="+
+    encodeURIComponent(message),
+    "_blank"
+  );
+
+  /*
+    Clear cart after successful order
+  */
+  cart=[];
+  updateCart();
+  render();
 }
 
 updateCart();
