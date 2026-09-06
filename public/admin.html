@@ -7,7 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/supabase-config.js"></script>
 <style>
-*{box-sizing:border-box}:root{--green:#0b5b2a;--green2:#16833d;--light:#edf8eb;--orange:#f47721;--red:#c62828;--blue:#2878c8;--ink:#17351e;--muted:#68756d;--line:#e2ebe1;--bg:#f5f8f4}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--ink)}button,input,select{font:inherit}button{cursor:pointer}header{background:linear-gradient(135deg,#075522,#19a347);color:#fff;padding:20px}.brand{font-size:24px;font-weight:900}.tag{margin-top:5px;font-size:13px}nav{background:#fff;border-bottom:1px solid var(--line);display:flex;gap:6px;padding:10px 14px;overflow:auto;position:sticky;top:0;z-index:100}nav button{border:0;background:#eef7ec;color:var(--ink);padding:11px 15px;border-radius:10px;font-weight:800;white-space:nowrap}nav button.active{background:var(--green);color:#fff}main{max-width:1250px;margin:auto;padding:20px}.tab{display:none}.tab.active{display:block}h2{margin-top:0}.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:13px}.card,.panel,.form{background:#fff;border:1px solid var(--line);border-radius:17px;padding:16px;box-shadow:0 4px 15px #00000008}.card-title{color:var(--muted);font-size:12px;font-weight:700}.num{margin-top:7px;font-size:24px;font-weight:900;color:var(--green)}.dashboard-grid{display:grid;grid-template-columns:1.4fr .8fr;gap:16px;margin-top:18px}.panel h3{margin-top:0}.chart{height:260px;display:flex;align-items:end;gap:13px;padding:20px 5px 0;border-bottom:1px solid #ddd}.bar-wrap{flex:1;height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center}.bar{width:65%;min-height:3px;background:linear-gradient(#19a347,#0b5b2a);border-radius:7px 7px 0 0}.bar-label{font-size:10px;color:var(--muted);margin-top:7px}.bar-value{font-size:10px;font-weight:800;margin-bottom:4px}.status{display:inline-block;padding:6px 9px;border-radius:8px;font-size:11px;font-weight:900}.pending{background:#fff4d6;color:#9b6900}.received{background:#e5f1ff;color:#2866a5}.preparing{background:#fff0dc;color:#b15d00}.delivery{background:#e6f5ff;color:#1374a3}.delivered{background:#e6f7e4;color:#18783a}.cancelled{background:#ffe6e3;color:#b42318}.table-wrap{overflow:auto;background:#fff;border-radius:15px}table{width:100%;border-collapse:collapse;min-width:750px}th,td{padding:12px;border-bottom:1px solid #edf1ec;text-align:left;font-size:13px}th{background:#f5f9f4;color:#526057;font-size:11px;text-transform:uppercase}tr:hover td{background:#fbfdfb}.search{width:100%;border:1px solid #d8e4d6;border-radius:10px;padding:11px;margin:8px 0 14px;outline:none}.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}.filters button{border:1px solid #d7e4d5;background:#fff;padding:8px 12px;border-radius:9px;font-weight:700}.filters button.active{background:var(--green);color:#fff}.btn{border:0;border-radius:9px;padding:9px 12px;font-weight:800;color:#fff}.btn.green{background:var(--green)}.btn.orange{background:var(--orange)}.btn.blue{background:var(--blue)}.btn.red{background:var(--red)}.btn.gray{background:#777}.form{margin-bottom:20px}.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.form-group label{display:block;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:4px}.form-group input,.form-group select{width:100%;padding:10px;border:1px solid #d7e4d5;border-radius:9px}.section-label{margin:18px 0 8px;font-weight:900;color:var(--green)}.product-img{width:52px;height:52px;object-fit:cover;border-radius:10px;border:1px solid #ddd}.modal{display:none;position:fixed;inset:0;background:#0008;z-index:999;padding:15px;overflow:auto}.modal.open{display:block}.modal-box{max-width:700px;margin:30px auto;background:#fff;border-radius:20px;padding:20px;box-shadow:0 25px 80px #0005}.modal-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:15px}.close{border:0;background:#edf5eb;border-radius:9px;padding:8px 11px}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.detail-box{background:#f7faf6;border:1px solid var(--line);padding:12px;border-radius:10px}.detail-box small{display:block;color:var(--muted);margin-bottom:4px}.profit{color:#16833d;font-weight:900}.top-product{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #edf1ec}.report-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}@media(max-width:1000px){.cards{grid-template-columns:repeat(3,1fr)}.dashboard-grid{grid-template-columns:1fr}}@media(max-width:700px){main{padding:12px}header{padding:16px}.brand{font-size:19px}.cards{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}.report-cards{grid-template-columns:repeat(2,1fr)}.detail-grid{grid-template-columns:1fr}}
+*{box-sizing:border-box}:root{--green:#0b5b2a;--green2:#16833d;--light:#edf8eb;--orange:#f47721;--red:#c62828;--blue:#2878c8;--ink:#17351e;--muted:#68756d;--line:#e2ebe1;--bg:#f5f8f4}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--ink)}button,input,select{font:inherit}button{cursor:pointer}header{background:linear-gradient(135deg,#075522,#19a347);color:#fff;padding:20px}.brand{font-size:24px;font-weight:900}.tag{margin-top:5px;font-size:13px}nav{background:#fff;border-bottom:1px solid var(--line);display:flex;gap:6px;padding:10px 14px;overflow:auto;position:sticky;top:0;z-index:100}nav button{border:0;background:#eef7ec;color:var(--ink);padding:11px 15px;border-radius:10px;font-weight:800;white-space:nowrap}nav button.active{background:var(--green);color:#fff}main{max-width:1250px;margin:auto;padding:20px}.tab{display:none}.tab.active{display:block}h2{margin-top:0}.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:13px}.card,.panel,.form{background:#fff;border:1px solid var(--line);border-radius:17px;padding:16px;box-shadow:0 4px 15px #00000008}.card-title{color:var(--muted);font-size:12px;font-weight:700}.num{margin-top:7px;font-size:24px;font-weight:900;color:var(--green)}.dashboard-grid{display:grid;grid-template-columns:1.4fr .8fr;gap:16px;margin-top:18px}.panel h3{margin-top:0}.chart{height:260px;display:flex;align-items:end;gap:13px;padding:20px 5px 0;border-bottom:1px solid #ddd}.bar-wrap{flex:1;height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center}.bar{width:65%;min-height:3px;background:linear-gradient(#19a347,#0b5b2a);border-radius:7px 7px 0 0}.bar-label{font-size:10px;color:var(--muted);margin-top:7px}.bar-value{font-size:10px;font-weight:800;margin-bottom:4px}.status{display:inline-block;padding:6px 9px;border-radius:8px;font-size:11px;font-weight:900}.pending{background:#fff4d6;color:#9b6900}.received{background:#e5f1ff;color:#2866a5}.preparing{background:#fff0dc;color:#b15d00}.delivery{background:#e6f5ff;color:#1374a3}.delivered{background:#e6f7e4;color:#18783a}.cancelled{background:#ffe6e3;color:#b42318}.table-wrap{overflow:auto;background:#fff;border-radius:15px}table{width:100%;border-collapse:collapse;min-width:750px}th,td{padding:12px;border-bottom:1px solid #edf1ec;text-align:left;font-size:13px}th{background:#f5f9f4;color:#526057;font-size:11px;text-transform:uppercase}tr:hover td{background:#fbfdfb}.search{width:100%;border:1px solid #d8e4d6;border-radius:10px;padding:11px;margin:8px 0 14px;outline:none}.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}.filters button{border:1px solid #d7e4d5;background:#fff;padding:8px 12px;border-radius:9px;font-weight:700}.filters button.active{background:var(--green);color:#fff}.btn{border:0;border-radius:9px;padding:9px 12px;font-weight:800;color:#fff}.btn.green{background:var(--green)}.btn.orange{background:var(--orange)}.btn.blue{background:var(--blue)}.btn.red{background:var(--red)}.btn.gray{background:#777}.form{margin-bottom:20px}.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.form-group label{display:block;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:4px}.form-group input,.form-group select{width:100%;padding:10px;border:1px solid #d7e4d5;border-radius:9px}.section-label{margin:18px 0 8px;font-weight:900;color:var(--green)}.product-img{width:52px;height:52px;object-fit:cover;border-radius:10px;border:1px solid #ddd}.modal{display:none;position:fixed;inset:0;background:#0008;z-index:999;padding:15px;overflow:auto}.modal.open{display:block}.modal-box{max-width:700px;margin:30px auto;background:#fff;border-radius:20px;padding:20px;box-shadow:0 25px 80px #0005}.modal-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:15px}.close{border:0;background:#edf5eb;border-radius:9px;padding:8px 11px}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.detail-box{background:#f7faf6;border:1px solid var(--line);padding:12px;border-radius:10px}.detail-box small{display:block;color:var(--muted);margin-bottom:4px}.profit{color:#16833d;font-weight:900}.category-row td{position:sticky;left:0}.top-product{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #edf1ec}.report-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}@media(max-width:1000px){.cards{grid-template-columns:repeat(3,1fr)}.dashboard-grid{grid-template-columns:1fr}}@media(max-width:700px){main{padding:12px}header{padding:16px}.brand{font-size:19px}.cards{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}.report-cards{grid-template-columns:repeat(2,1fr)}.detail-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -19,14 +19,20 @@
 </div><div class="dashboard-grid"><div class="panel"><h3>📈 Last 7 Days Sales</h3><div id="salesChart" class="chart"></div></div><div class="panel"><h3>💰 Last 7 Days Profit</h3><div id="profitChart" class="chart"></div></div></div><div class="dashboard-grid"><div class="panel"><h3>🛒 Recent Orders</h3><div id="recentOrders"></div></div><div class="panel"><h3>🔥 Top Selling Products</h3><div id="topProducts"></div></div></div></section>
 <section id="orders" class="tab"><h2>📦 Live Orders</h2><input id="orderSearch" class="search" placeholder="Search order / customer / mobile" oninput="renderOrders()"><div class="table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Mobile</th><th>Amount</th><th>Profit</th><th>Payment</th><th>Status</th><th>Action</th></tr></thead><tbody id="ordersTable"></tbody></table></div></section>
 <section id="history" class="tab"><h2>🕘 Complete Order History</h2><p style="color:var(--muted)">All orders remain safely stored in Supabase.</p><div class="filters"><button class="active" onclick="setHistoryFilter('all',this)">All</button><button onclick="setHistoryFilter('today',this)">Today</button><button onclick="setHistoryFilter('7',this)">7 Days</button><button onclick="setHistoryFilter('month',this)">This Month</button></div><input id="historySearch" class="search" placeholder="Search order / customer / mobile" oninput="renderHistory()"><div class="table-wrap"><table><thead><tr><th>Order</th><th>Date</th><th>Customer</th><th>Amount</th><th>Profit</th><th>Payment</th><th>Status</th><th>Action</th></tr></thead><tbody id="historyTable"></tbody></table></div></section>
-<section id="products" class="tab"><h2>🥦 Product Management</h2><div class="form"><h3>➕ Add Product</h3><div class="form-grid"><div class="form-group"><label>Product Name</label><input id="pname" placeholder="Example: Methi"></div><div class="form-group"><label>Category</label><select id="pcat"><option>Fresh Cut Vegetables</option><option>Fresh Cut Fruits</option><option>Ready-to-Cook Mixes</option><option>Fresh Sprouts</option></select></div><div class="form-group"><label>Image</label><input id="pimage" type="file" accept="image/*"></div></div><div class="section-label">🟢 Whole Price</div><div class="form-grid"><div class="form-group"><label>250g</label><input id="whole250" type="number" min="0"></div><div class="form-group"><label>500g</label><input id="whole500" type="number" min="0"></div><div class="form-group"><label>1kg</label><input id="whole1000" type="number" min="0"></div></div><div class="section-label">🔪 Chopped / Cut Price</div><div class="form-grid"><div class="form-group"><label>250g</label><input id="chop250" type="number" min="0"></div><div class="form-group"><label>500g</label><input id="chop500" type="number" min="0"></div><div class="form-group"><label>1kg</label><input id="chop1000" type="number" min="0"></div></div><div class="section-label">💰 Cost Price</div><div class="form-grid"><div class="form-group"><label>250g Cost</label><input id="cost250" type="number" min="0"></div><div class="form-group"><label>500g Cost</label><input id="cost500" type="number" min="0"></div><div class="form-group"><label>1kg Cost</label><input id="cost1000" type="number" min="0"></div></div><div class="form-grid" style="margin-top:12px"><div class="form-group"><label>Availability</label><select id="pstatus"><option>Available</option><option>Out of Stock</option></select></div></div><button class="btn green" style="margin-top:15px" onclick="addProduct()">Add Product</button></div><h3>Existing Products</h3><div class="table-wrap"><table><thead><tr><th>Image</th><th>Product</th><th>Category</th><th>Whole<br>250/500/1kg</th><th>Chop<br>250/500/1kg</th><th>Cost<br>250/500/1kg</th><th>Status</th><th>Action</th></tr></thead><tbody id="productsTable"></tbody></table></div></section>
+<section id="products" class="tab"><h2>🥦 Product Management</h2><div class="form"><h3>➕ Add Product</h3><div class="form-grid"><div class="form-group"><label>Product Name</label><input id="pname" placeholder="Example: Methi"></div><div class="form-group"><label>Category</label><select id="pcat"><option>Fresh Cut Vegetables</option><option>Fresh Cut Fruits</option><option>Ready-to-Cook Mixes</option><option>Fresh Sprouts</option></select></div><div class="form-group"><label>Image</label><input id="pimage" type="file" accept="image/*"></div></div><div class="section-label">🟢 Whole Price</div><div class="form-grid"><div class="form-group"><label>250g</label><input id="whole250" type="number" min="0"></div><div class="form-group"><label>500g</label><input id="whole500" type="number" min="0"></div><div class="form-group"><label>1kg</label><input id="whole1000" type="number" min="0"></div></div><div class="section-label">🔪 Chopped / Cut Price</div><div class="form-grid"><div class="form-group"><label>250g</label><input id="chop250" type="number" min="0"></div><div class="form-group"><label>500g</label><input id="chop500" type="number" min="0"></div><div class="form-group"><label>1kg</label><input id="chop1000" type="number" min="0"></div></div><div class="section-label">💰 Cost Price</div><div class="form-grid"><div class="form-group"><label>250g Cost</label><input id="cost250" type="number" min="0"></div><div class="form-group"><label>500g Cost</label><input id="cost500" type="number" min="0"></div><div class="form-group"><label>1kg Cost</label><input id="cost1000" type="number" min="0"></div></div><div class="form-grid" style="margin-top:12px"><div class="form-group"><label>Availability</label><select id="pstatus"><option>Available</option><option>Out of Stock</option></select></div></div><button class="btn green" style="margin-top:15px" onclick="addProduct()">Add Product</button></div><h3>Existing Products</h3><div class="filters" id="productCategoryFilters">
+<button class="active" onclick="setProductCategory('all',this)">All Products</button>
+<button onclick="setProductCategory('Fresh Cut Vegetables',this)">🥦 Fresh Cut Vegetables</button>
+<button onclick="setProductCategory('Fresh Cut Fruits',this)">🍎 Fresh Cut Fruits</button>
+<button onclick="setProductCategory('Ready-to-Cook Mixes',this)">🍲 Ready-to-Cook Mixes</button>
+<button onclick="setProductCategory('Fresh Sprouts',this)">🌱 Fresh Sprouts</button>
+</div><div class="table-wrap"><table><thead><tr><th>Image</th><th>Product</th><th>Category</th><th>Whole<br>250/500/1kg</th><th>Chop<br>250/500/1kg</th><th>Cost<br>250/500/1kg</th><th>Status</th><th>Action</th></tr></thead><tbody id="productsTable"></tbody></table></div></section>
 <section id="customers" class="tab"><h2>👤 Customers</h2><input id="customerSearch" class="search" placeholder="Search customer / mobile" oninput="renderCustomers()"><div class="table-wrap"><table><thead><tr><th>Name</th><th>Mobile</th><th>Area</th><th>Orders</th><th>Total Spent</th><th>Last Order</th></tr></thead><tbody id="customersTable"></tbody></table></div></section>
 <section id="reports" class="tab"><h2>📈 Business Reports</h2><div class="report-cards"><div class="card"><div class="card-title">Total Sales</div><div class="num" id="reportSales">₹0</div></div><div class="card"><div class="card-title">Total Profit</div><div class="num" id="reportProfit">₹0</div></div><div class="card"><div class="card-title">Total Orders</div><div class="num" id="reportOrders">0</div></div><div class="card"><div class="card-title">Average Order</div><div class="num" id="reportAverage">₹0</div></div></div><div class="panel"><h3>📊 Product Performance</h3><div class="table-wrap"><table><thead><tr><th>Product</th><th>Quantity Sold</th><th>Sales</th><th>Profit</th></tr></thead><tbody id="productReport"></tbody></table></div></div></section>
 </main>
 <div id="orderModal" class="modal"><div class="modal-box"><div class="modal-head"><h2>📦 Order Details</h2><button class="close" onclick="closeModal('orderModal')">✕</button></div><div id="orderDetails"></div></div></div>
 <div id="productModal" class="modal"><div class="modal-box"><div class="modal-head"><h2>✏️ Edit Product</h2><button class="close" onclick="closeModal('productModal')">✕</button></div><input type="hidden" id="editId"><div class="form-grid"><div class="form-group"><label>Product Name</label><input id="editName"></div><div class="form-group"><label>Category</label><select id="editCategory"><option>Fresh Cut Vegetables</option><option>Fresh Cut Fruits</option><option>Ready-to-Cook Mixes</option><option>Fresh Sprouts</option></select></div><div class="form-group"><label>Status</label><select id="editStatus"><option>Available</option><option>Out of Stock</option></select></div></div><div class="section-label">🟢 Whole Price</div><div class="form-grid"><div class="form-group"><label>250g</label><input id="editWhole250" type="number"></div><div class="form-group"><label>500g</label><input id="editWhole500" type="number"></div><div class="form-group"><label>1kg</label><input id="editWhole1000" type="number"></div></div><div class="section-label">🔪 Chopped Price</div><div class="form-grid"><div class="form-group"><label>250g</label><input id="editChop250" type="number"></div><div class="form-group"><label>500g</label><input id="editChop500" type="number"></div><div class="form-group"><label>1kg</label><input id="editChop1000" type="number"></div></div><div class="section-label">💰 Cost Price</div><div class="form-grid"><div class="form-group"><label>250g Cost</label><input id="editCost250" type="number"></div><div class="form-group"><label>500g Cost</label><input id="editCost500" type="number"></div><div class="form-group"><label>1kg Cost</label><input id="editCost1000" type="number"></div></div><button class="btn green" style="margin-top:15px" onclick="saveProductEdit()">Save Changes</button></div></div>
 <script>
-let products=[];let orders=[];let historyFilter="all";
+let products=[];let orders=[];let historyFilter="all";let productCategoryFilter="all";
 function showTab(id,button){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));const el=document.getElementById(id);if(!el)return;el.classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));if(button)button.classList.add('active');renderAll()}
 function num(v){return Number(v)||0}function money(v){return '₹'+Math.round(num(v)).toLocaleString('en-IN')}
 function orderDate(o){return o.created_at?new Date(o.created_at):new Date()}function isToday(o){const d=orderDate(o),n=new Date();return d.getDate()===n.getDate()&&d.getMonth()===n.getMonth()&&d.getFullYear()===n.getFullYear()}
@@ -49,7 +55,130 @@ function sendWhatsAppStatus(order,status){let mobile=String(order.mobile||'').re
 function setHistoryFilter(filter,button){historyFilter=filter;document.querySelectorAll('#history .filters button').forEach(x=>x.classList.remove('active'));button.classList.add('active');renderHistory()}
 function renderHistory(){const search=(document.getElementById('historySearch').value||'').toLowerCase().trim(),now=new Date();const list=orders.filter(o=>{const d=orderDate(o);let ok=true;if(historyFilter==='today')ok=sameDay(d,now);else if(historyFilter==='7'){const start=new Date();start.setDate(start.getDate()-6);start.setHours(0,0,0,0);ok=d>=start}else if(historyFilter==='month')ok=d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();return ok&&(o.order_number+' '+o.customer_name+' '+o.mobile).toLowerCase().includes(search)});document.getElementById('historyTable').innerHTML=list.map(o=>`<tr><td><b>${escapeHTML(o.order_number||'')}</b></td><td>${orderDate(o).toLocaleString('en-IN')}</td><td>${escapeHTML(o.customer_name||'')}</td><td>${money(o.total_amount)}</td><td class="profit">${money(getOrderProfit(o))}</td><td>${escapeHTML(o.payment_method||'')}</td><td><span class="status ${statusClass(o.status)}">${escapeHTML(o.status||'')}</span></td><td><button class="btn blue" onclick="viewOrder(this.dataset.id)" data-id="${escapeHTML(String(o.id))}">View</button></td></tr>`).join('')}
 function viewOrder(id){const o=orders.find(x=>String(x.id)===String(id));if(!o)return;const items=parseItems(o);const itemHTML=items.map(item=>{const selling=num(item.selling_price??item.price),cost=num(item.cost_price),qty=num(item.quantity??item.qty),profit=(selling-cost)*qty;return `<tr><td><b>${escapeHTML(item.name||'')}</b></td><td>${escapeHTML(item.type||'Whole')}</td><td>${escapeHTML(item.size||'')}</td><td>${qty}</td><td>${money(selling)}</td><td>${money(cost)}</td><td class="profit">${money(profit)}</td></tr>`}).join('');document.getElementById('orderDetails').innerHTML=`<div class="detail-grid"><div class="detail-box"><small>Order Number</small><b>${escapeHTML(o.order_number||'')}</b></div><div class="detail-box"><small>Date & Time</small><b>${orderDate(o).toLocaleString('en-IN')}</b></div><div class="detail-box"><small>Customer</small><b>${escapeHTML(o.customer_name||'')}</b></div><div class="detail-box"><small>Mobile</small><b>${escapeHTML(o.mobile||'')}</b></div><div class="detail-box"><small>Area</small><b>${escapeHTML(o.area||'Mulund')}</b></div><div class="detail-box"><small>Payment</small><b>${escapeHTML(o.payment_method||'')}</b></div></div><div class="detail-box" style="margin-top:12px"><small>Delivery Address</small><b>${escapeHTML(o.address||'')}</b></div><h3 style="margin-top:20px">🛒 Products</h3><div class="table-wrap"><table><thead><tr><th>Product</th><th>Type</th><th>Size</th><th>Qty</th><th>Selling</th><th>Cost</th><th>Profit</th></tr></thead><tbody>${itemHTML||'<tr><td colspan="7">No product snapshot available</td></tr>'}</tbody></table></div><div style="margin-top:15px;background:#f2faf0;padding:15px;border-radius:12px"><p>Subtotal: <b>${money(o.total_amount)}</b></p><p>Total Cost: <b>${money(o.total_cost)}</b></p><p style="font-size:18px">Profit: <span class="profit">${money(getOrderProfit(o))}</span></p></div>`;document.getElementById('orderModal').classList.add('open')}
-function renderProducts(){document.getElementById('productsTable').innerHTML=products.map(p=>`<tr><td>${p.image_url?`<img class="product-img" src="${escapeHTML(p.image_url)}" alt="${escapeHTML(p.name||'')}">`:'🥦'}</td><td><b>${escapeHTML(p.name||'')}</b></td><td>${escapeHTML(p.category||'')}</td><td>₹${num(p.whole_price_250g)} / ₹${num(p.whole_price_500g)} / ₹${num(p.whole_price_1kg)}</td><td>₹${num(p.chop_price_250g)} / ₹${num(p.chop_price_500g)} / ₹${num(p.chop_price_1kg)}</td><td>₹${num(p.cost_price_250g)} / ₹${num(p.cost_price_500g)} / ₹${num(p.cost_price_1kg)}</td><td><span class="status ${p.status==='Available'?'delivered':'cancelled'}">${escapeHTML(p.status||'')}</span></td><td><button class="btn blue" onclick="editProduct(this.dataset.id)" data-id="${escapeHTML(String(p.id))}">Edit</button> <button class="btn orange" onclick="toggleProduct(this.dataset.id)" data-id="${escapeHTML(String(p.id))}">${p.status==='Available'?'Out of Stock':'Available'}</button> <button class="btn red" onclick="deleteProduct(this.dataset.id)" data-id="${escapeHTML(String(p.id))}">Delete</button></td></tr>`).join('')}
+function setProductCategory(category,button){
+  productCategoryFilter=category;
+  document.querySelectorAll("#productCategoryFilters button").forEach(x=>x.classList.remove("active"));
+  if(button)button.classList.add("active");
+  renderProducts();
+}
+
+function renderProducts(){
+  const table=document.getElementById("productsTable");
+  if(!table)return;
+
+  const categoryOrder=[
+    "Fresh Cut Vegetables",
+    "Fresh Cut Fruits",
+    "Ready-to-Cook Mixes",
+    "Fresh Sprouts"
+  ];
+
+  const filteredProducts=products.filter(p=>
+    productCategoryFilter==="all" ||
+    p.category===productCategoryFilter
+  );
+
+  if(!filteredProducts.length){
+    table.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:25px;color:var(--muted)">No products found in this category.</td></tr>`;
+    return;
+  }
+
+  const groups={};
+  categoryOrder.forEach(category=>groups[category]=[]);
+  groups["Other"]=[];
+
+  filteredProducts.forEach(p=>{
+    const category=categoryOrder.includes(p.category)?p.category:"Other";
+    groups[category].push(p);
+  });
+
+  let output="";
+
+  categoryOrder.concat(["Other"]).forEach(category=>{
+    const group=groups[category];
+    if(!group.length)return;
+
+    const icon=
+      category==="Fresh Cut Vegetables"?"🥦 ":
+      category==="Fresh Cut Fruits"?"🍎 ":
+      category==="Ready-to-Cook Mixes"?"🍲 ":
+      category==="Fresh Sprouts"?"🌱 ":"📦 ";
+
+    output+=`
+      <tr>
+        <td colspan="8" style="background:#edf8eb;color:var(--green);font-weight:900;font-size:14px;padding:12px 14px;border-top:2px solid #d8ead5">
+          ${icon}${escapeHTML(category)}
+          <span style="font-size:11px;color:var(--muted);margin-left:8px">
+            (${group.length} ${group.length===1?"product":"products"})
+          </span>
+        </td>
+      </tr>
+    `;
+
+    output+=group.map(p=>`
+      <tr>
+        <td>
+          ${
+            p.image_url
+            ?`<img class="product-img" src="${escapeHTML(p.image_url)}" alt="${escapeHTML(p.name||"")}">`
+            :"🥦"
+          }
+        </td>
+
+        <td><b>${escapeHTML(p.name||"")}</b></td>
+
+        <td>${escapeHTML(p.category||"")}</td>
+
+        <td>
+          ₹${num(p.whole_price_250g)} /
+          ₹${num(p.whole_price_500g)} /
+          ₹${num(p.whole_price_1kg)}
+        </td>
+
+        <td>
+          ₹${num(p.chop_price_250g)} /
+          ₹${num(p.chop_price_500g)} /
+          ₹${num(p.chop_price_1kg)}
+        </td>
+
+        <td>
+          ₹${num(p.cost_price_250g)} /
+          ₹${num(p.cost_price_500g)} /
+          ₹${num(p.cost_price_1kg)}
+        </td>
+
+        <td>
+          <span class="status ${p.status==="Available"?"delivered":"cancelled"}">
+            ${escapeHTML(p.status||"")}
+          </span>
+        </td>
+
+        <td>
+          <button
+            class="btn blue"
+            onclick="editProduct(this.dataset.id)"
+            data-id="${escapeHTML(String(p.id))}"
+          >Edit</button>
+
+          <button
+            class="btn orange"
+            onclick="toggleProduct(this.dataset.id)"
+            data-id="${escapeHTML(String(p.id))}"
+          >${p.status==="Available"?"Out of Stock":"Available"}</button>
+
+          <button
+            class="btn red"
+            onclick="deleteProduct(this.dataset.id)"
+            data-id="${escapeHTML(String(p.id))}"
+          >Delete</button>
+        </td>
+      </tr>
+    `).join("");
+  });
+
+  table.innerHTML=output;
+}
+
 async function uploadProductImage(file){if(!file)return null;const fileName=Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9.-]/g,'');const {error}=await supabaseClient.storage.from('product-images').upload(fileName,file,{upsert:true});if(error)throw error;return supabaseClient.storage.from('product-images').getPublicUrl(fileName).data.publicUrl}
 async function addProduct(){const name=document.getElementById('pname').value.trim();if(!name){alert('Please enter product name.');return}const file=document.getElementById('pimage').files[0];try{let imageUrl=null;if(file)imageUrl=await uploadProductImage(file);const payload={name,category:document.getElementById('pcat').value,image_url:imageUrl,whole_price_250g:num(document.getElementById('whole250').value),whole_price_500g:num(document.getElementById('whole500').value),whole_price_1kg:num(document.getElementById('whole1000').value),chop_price_250g:num(document.getElementById('chop250').value),chop_price_500g:num(document.getElementById('chop500').value),chop_price_1kg:num(document.getElementById('chop1000').value),cost_price_250g:num(document.getElementById('cost250').value),cost_price_500g:num(document.getElementById('cost500').value),cost_price_1kg:num(document.getElementById('cost1000').value),status:document.getElementById('pstatus').value};const {error}=await supabaseClient.from('products').insert([payload]);if(error)throw error;alert('Product added successfully.');clearProductForm();await loadProducts()}catch(error){console.error(error);alert('Product save failed: '+error.message)}}
 function clearProductForm(){['pname','whole250','whole500','whole1000','chop250','chop500','chop1000','cost250','cost500','cost1000'].forEach(id=>document.getElementById(id).value='');document.getElementById('pimage').value=''}
