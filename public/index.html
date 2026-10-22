@@ -15,7 +15,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
 header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}.nav{max-width:1180px;margin:auto;padding:10px 18px;display:flex;align-items:center;gap:14px}
 .logo{width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid #e7f2e5}.brand{font-weight:950;font-size:19px;line-height:1;color:var(--g)}.brand small{display:block;color:var(--o);font-size:9px;letter-spacing:1.5px;margin-top:4px}
 .location{border:1px solid #dbe8d9;background:#f7fbf5;border-radius:12px;padding:9px 12px;font-size:12px;white-space:nowrap}.location b{display:block;color:var(--g);font-size:13px}
-.search-wrap{position:relative;flex:1;min-width:150px;z-index:80}.search{width:100%;min-width:0;border:1px solid #dbe6d8;background:#f8faf8;border-radius:13px;padding:12px 15px;outline:none}.search:focus{background:#fff;border-color:#7bb58a}.search-suggestions{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;max-height:340px;overflow:auto;background:#fff;border:1px solid #dce8d9;border-radius:13px;box-shadow:0 14px 35px #123c2024;padding:6px;z-index:200}.search-suggestions.open{display:block}.search-suggestion{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:#fff;padding:10px;border-radius:9px;color:var(--ink)}.search-suggestion:hover,.search-suggestion:focus{background:#eff8ed;outline:none}.suggestion-emoji{font-size:23px;width:32px;text-align:center}.suggestion-name{font-weight:850;font-size:13px}.suggestion-category{display:block;color:var(--muted);font-size:11px;margin-top:3px}.suggestion-price{margin-left:auto;font-weight:900;color:var(--g);white-space:nowrap}.search-empty{padding:12px;font-size:12px;color:var(--muted)}
+.search{flex:1;min-width:150px;border:1px solid #dbe6d8;background:#f8faf8;border-radius:13px;padding:12px 15px;outline:none}.search:focus{background:#fff;border-color:#7bb58a}
 .cart{border:0;background:var(--g);color:#fff;border-radius:12px;padding:12px 15px;font-weight:850;white-space:nowrap}.cart span{background:#fff;color:var(--g);border-radius:99px;padding:2px 6px;margin-left:4px}
 .hero{max-width:1180px;margin:auto;padding:22px 18px 12px}.heroBox{background:linear-gradient(120deg,#eaf8e8,#fffdf5);border:1px solid #dcebd9;border-radius:24px;display:grid;grid-template-columns:1.35fr .65fr;overflow:hidden;min-height:270px}
 .heroCopy{padding:32px}.eyebrow{display:inline-block;background:#d9f0d7;color:var(--g);border-radius:99px;padding:7px 11px;font-size:12px;font-weight:850}
@@ -43,7 +43,7 @@ main{max-width:1180px;margin:auto;padding:10px 18px 70px}.notice{display:flex;al
 .track-order{max-width:1180px;margin:0 auto;padding:20px 18px 70px}.track-box{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;max-width:600px}.track-result{margin-top:15px;background:#f4f9f2;border:1px solid #dbe9d7;border-radius:12px;padding:15px}.track-result h3{margin-top:0;color:var(--g)}
 .float{position:fixed;right:17px;bottom:17px;background:var(--g);color:#fff;border:0;border-radius:16px;padding:13px 16px;font-weight:950;z-index:70;box-shadow:0 8px 24px #123c2040}
 footer{background:#083d1d;color:#eaf6e8;padding:30px 18px}.foot{max-width:1180px;margin:auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.foot strong{font-size:17px;color:#fff}.foot small{display:block;color:#bdd5bf;margin-top:5px}
-@media(max-width:900px){.nav{flex-wrap:wrap}.search-wrap{order:5;flex-basis:100%}.heroBox{grid-template-columns:1fr}.heroArt{display:none}.grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.nav{flex-wrap:wrap}.search{order:5;flex-basis:100%}.heroBox{grid-template-columns:1fr}.heroArt{display:none}.grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:650px){.nav{padding:8px 12px}.brand{font-size:16px}.logo{width:46px;height:46px}.location{margin-left:auto}.cats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:repeat(2,1fr);gap:10px}.pic{height:145px}.emoji{font-size:54px}.card{padding:9px}.heroCopy{padding:24px}.hero h1{font-size:34px}.cartPanel{top:62px;height:calc(100vh - 75px);right:8px;width:calc(100vw - 16px)}.product-popup{padding:8px}.product-popup-box{border-radius:18px;padding:14px}.popup-product-image,.popup-emoji{height:245px}}
 </style>
 </head>
@@ -55,7 +55,7 @@ footer{background:#083d1d;color:#eaf6e8;padding:30px 18px}.foot{max-width:1180px
 <img class="logo" src="/kanade-foods-logo-v3.jpg" alt="Kanade Foods">
 <div class="brand">KANADE FOODS<small>CHOP • DROP • DONE</small></div>
 <div class="location">📍 Deliver to<b>Mulund</b></div>
-<div class="search-wrap"><input id="search" class="search" placeholder="Search vegetables, fruits, sprouts..." autocomplete="off" aria-label="Search products"><div id="searchSuggestions" class="search-suggestions" role="listbox"></div></div>
+<input id="search" class="search" placeholder="Search vegetables, fruits, sprouts...">
 <button class="cart" onclick="toggleCart()">🛒 Cart <span id="cartCount">0</span></button>
 </div></header>
 
@@ -149,6 +149,7 @@ async function loadProductsFromSupabase(){
         Whole:{250:Number(p.whole_price_250g)||old250,500:Number(p.whole_price_500g)||old500,1000:Number(p.whole_price_1kg)||old1000},
         Chopped:{250:Number(p.chop_price_250g)||0,500:Number(p.chop_price_500g)||0,1000:Number(p.chop_price_1kg)||0}
       },
+      costs:{250:Number(p.cost_price_250g)||0,500:Number(p.cost_price_500g)||0,1000:Number(p.cost_price_1kg)||0},
       status:p.status||"Available"
     };
   });
@@ -164,58 +165,7 @@ document.querySelectorAll(".cat").forEach(function(button){
     document.getElementById("sectionTitle").textContent=button.textContent.trim();render();
   });
 });
-document.getElementById("search").addEventListener("input",function(){render();renderSearchSuggestions();});
-document.getElementById("search").addEventListener("focus",renderSearchSuggestions);
-document.addEventListener("click",function(event){
-  const wrap=document.querySelector(".search-wrap");
-  if(wrap&&!wrap.contains(event.target))hideSearchSuggestions();
-});
-document.getElementById("search").addEventListener("keydown",function(event){
-  if(event.key==="Escape")hideSearchSuggestions();
-  if(event.key==="Enter"){
-    const first=document.querySelector("#searchSuggestions .search-suggestion");
-    if(first){event.preventDefault();first.click();}
-  }
-});
-
-function categoryLabel(value){
-  return ({Vegetables:"Fresh Cut Vegetables",Fruits:"Fresh Cut Fruits",Ready:"Ready-to-Cook Mixes",Sprouts:"Fresh Sprouts"})[value]||value;
-}
-function hideSearchSuggestions(){
-  const box=document.getElementById("searchSuggestions");
-  if(box)box.classList.remove("open");
-}
-function renderSearchSuggestions(){
-  const input=document.getElementById("search");
-  const box=document.getElementById("searchSuggestions");
-  if(!input||!box)return;
-  const query=input.value.trim().toLowerCase();
-  if(query.length<1){box.innerHTML="";box.classList.remove("open");return;}
-  const matches=products.filter(p=>p.name.toLowerCase().includes(query)).slice(0,7);
-  if(!matches.length){box.innerHTML='<div class="search-empty">No matching products found.</div>';box.classList.add("open");return;}
-  box.innerHTML=matches.map(p=>{
-    const index=products.indexOf(p);
-    const price=getPrice(p,"Whole","250");
-    return `<button type="button" class="search-suggestion" role="option" onclick="chooseSearchSuggestion(${index})"><span class="suggestion-emoji">${p.emoji}</span><span><span class="suggestion-name">${escapeText(p.name)}</span><span class="suggestion-category">${categoryLabel(p.cat)}</span></span><span class="suggestion-price">₹${price}</span></button>`;
-  }).join("");
-  box.classList.add("open");
-}
-function escapeText(value){
-  return String(value||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
-}
-function chooseSearchSuggestion(index){
-  const p=products[index];if(!p)return;
-  cat=p.cat;
-  document.querySelectorAll(".cat").forEach(button=>{
-    const active=button.dataset.cat===cat;
-    button.classList.toggle("active",active);
-    if(active)document.getElementById("sectionTitle").textContent=button.textContent.trim();
-  });
-  document.getElementById("search").value=p.name;
-  hideSearchSuggestions();
-  render();
-  if(String(p.status).toLowerCase()!=="out of stock")openProductPopup(index);
-}
+document.getElementById("search").addEventListener("input",render);
 
 function unit(size){return size==="1000"?"1kg":size+"g";}
 
@@ -235,8 +185,8 @@ function render(){
     const out=String(p.status).toLowerCase()==="out of stock";
     const selected=cart.filter(x=>x.productId===p.id).reduce((t,x)=>t+x.qty,0);
     const wholePrice=getPrice(p,"Whole","250");
-    return `<article class="card ${out?"out-of-stock":""}" ${out?"":"onclick=\"openProductPopup("+pi+")\" role=\"button\" tabindex=\"0\" onkeydown=\"if(event.key==='Enter'||event.key===' '){event.preventDefault();openProductPopup("+pi+")}\""} style="cursor:${out?"not-allowed":"pointer"}">
-      <div class="pic" style="cursor:${out?"not-allowed":"pointer"}">
+    return `<article class="card ${out?"out-of-stock":""}">
+      <div class="pic" ${out?"":"onclick=\"openProductPopup("+pi+")\""} style="cursor:${out?"not-allowed":"pointer"}">
         ${p.image?`<img class="product-img" src="${p.image}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="emoji" style="display:none">${p.emoji}</span>`:`<span class="emoji">${p.emoji}</span>`}
         ${out?'<div class="out-stock-overlay"><span>OUT OF STOCK</span></div>':""}
       </div>
@@ -333,8 +283,27 @@ async function whatsapp(){
   if(!name||!phone||!address){alert("Please fill your name, mobile number and Mulund delivery address.");return;}
   const subtotal=cart.reduce((t,x)=>t+x.price*x.qty,0),delivery=subtotal>=499?0:40,total=subtotal+delivery,payment=document.getElementById("pay").value;
   const orderNumber="CDD"+Date.now().toString().slice(-6);
-  const orderItems=cart.map(x=>({name:x.name,type:x.type||"Whole",size:unit(x.size),quantity:x.qty,price:x.price}));
-  const {error}=await supabaseClient.from("orders").insert([{order_number:orderNumber,customer_name:name,mobile:phone,address:address,area:"Mulund",items:orderItems,total_amount:total,payment_method:payment,status:"Pending"}]);
+  // Save a complete item snapshot so Admin can display products and calculate profit later.
+  const orderItems=cart.map(x=>{
+    const product=products.find(p=>String(p.id)===String(x.productId));
+    const cost=product?Number(product.costs[x.size])||0:0;
+    return {
+      product_id:x.productId,
+      name:x.name,
+      type:x.type||"Whole",
+      size:unit(x.size),
+      size_grams:Number(x.size),
+      quantity:Number(x.qty),
+      qty:Number(x.qty),
+      price:Number(x.price),
+      selling_price:Number(x.price),
+      cost_price:cost
+    };
+  });
+  const totalCost=orderItems.reduce((sum,item)=>sum+(Number(item.cost_price)||0)*(Number(item.quantity)||0),0);
+  const profitAmount=subtotal-totalCost;
+  const orderPayload={order_number:orderNumber,customer_name:name,mobile:phone,address:address,area:"Mulund",items:orderItems,total_amount:total,payment_method:payment,status:"Pending"};
+  const {error}=await supabaseClient.from("orders").insert([orderPayload]);
   if(error){console.error(error);alert("Order could not be placed. Please try again.");return;}
   const lines=cart.map(x=>x.name+" - "+(x.type||"Whole")+" - "+unit(x.size)+" x "+x.qty+" = ₹"+(x.price*x.qty)).join("\n");
   const message=`Hello Kanade Foods - Chop Drop Done!
