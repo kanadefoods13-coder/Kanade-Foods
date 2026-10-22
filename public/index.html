@@ -128,6 +128,14 @@ footer{background:#083d1d;color:#eaf6e8;padding:30px 18px}.foot{max-width:1180px
 <script>
 let products=[],cat="Vegetables",cart=[],popupProductIndex=-1,popupType="Whole",popupQuantity=1;
 
+// Delivery settings: change these two values whenever your policy changes.
+const DELIVERY_FEE = 40;
+const FREE_DELIVERY_MINIMUM = 499;
+function getDeliveryCharge(subtotal){
+  if(subtotal<=0)return 0;
+  return subtotal>=FREE_DELIVERY_MINIMUM ? 0 : DELIVERY_FEE;
+}
+
 async function loadProductsFromSupabase(){
   const {data,error}=await supabaseClient.from("products").select("*").order("id",{ascending:true});
   if(error){console.error("Products load error:",error);document.getElementById("products").innerHTML='<div style="grid-column:1/-1;background:#fff;padding:30px;text-align:center;border-radius:15px">Unable to load products.</div>';return;}
@@ -185,8 +193,8 @@ function render(){
     const out=String(p.status).toLowerCase()==="out of stock";
     const selected=cart.filter(x=>x.productId===p.id).reduce((t,x)=>t+x.qty,0);
     const wholePrice=getPrice(p,"Whole","250");
-    return `<article class="card ${out?"out-of-stock":""}">
-      <div class="pic" ${out?"":"onclick=\"openProductPopup("+pi+")\""} style="cursor:${out?"not-allowed":"pointer"}">
+    return `<article class="card ${out?"out-of-stock":""}" ${out?"":"onclick=\"openProductPopup("+pi+")\" role=\"button\" tabindex=\"0\" onkeydown=\"if(event.key==='Enter'||event.key===' '){event.preventDefault();openProductPopup("+pi+")}\""} style="cursor:${out?"not-allowed":"pointer"}">
+      <div class="pic" style="cursor:${out?"not-allowed":"pointer"}">
         ${p.image?`<img class="product-img" src="${p.image}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="emoji" style="display:none">${p.emoji}</span>`:`<span class="emoji">${p.emoji}</span>`}
         ${out?'<div class="out-stock-overlay"><span>OUT OF STOCK</span></div>':""}
       </div>
@@ -258,7 +266,7 @@ function updateCart(){
   items.innerHTML=!cart.length?'<div style="padding:30px 0;text-align:center;color:#68756d">Your cart is empty.<br><br>🌱 Add something fresh to get started.</div>':cart.map(function(item,index){
     return `<div class="item"><div class="itemtop"><b>${item.name}</b><b>₹${item.price*item.qty}</b></div><div class="itemmeta">${item.type||"Whole"} • ${unit(item.size)} • ₹${item.price} each</div><div class="qty"><button onclick="qty(${index},-1)">−</button><span>${item.qty}</span><button onclick="qty(${index},1)">+</button><button class="remove" onclick="removeItem(${index})">Remove</button></div></div>`;
   }).join("");
-  const subtotal=cart.reduce((t,x)=>t+x.price*x.qty,0),delivery=subtotal?(subtotal>=499?0:40):0;
+  const subtotal=cart.reduce((t,x)=>t+x.price*x.qty,0),delivery=getDeliveryCharge(subtotal);
   document.getElementById("sub").textContent=subtotal;document.getElementById("del").textContent=delivery?"₹"+delivery:"FREE";document.getElementById("total").textContent=subtotal+delivery;
 }
 
@@ -281,12 +289,13 @@ async function whatsapp(){
   if(!cart.length){alert("Please add a product first.");return;}
   const name=document.getElementById("name").value.trim(),phone=document.getElementById("phone").value.trim(),address=document.getElementById("address").value.trim();
   if(!name||!phone||!address){alert("Please fill your name, mobile number and Mulund delivery address.");return;}
-  const subtotal=cart.reduce((t,x)=>t+x.price*x.qty,0),delivery=subtotal>=499?0:40,total=subtotal+delivery,payment=document.getElementById("pay").value;
+  const subtotal=cart.reduce((t,x)=>t+x.price*x.qty,0),delivery=getDeliveryCharge(subtotal),total=subtotal+delivery,payment=document.getElementById("pay").value;
   const orderNumber="CDD"+Date.now().toString().slice(-6);
   // Save a complete item snapshot so Admin can display products and calculate profit later.
   const orderItems=cart.map(x=>{
     const product=products.find(p=>String(p.id)===String(x.productId));
-    const cost=product?Number(product.costs[x.size])||0:0;
+    const rawCost=product ? product.costs[x.size] : null;
+    const cost=(rawCost!==null && rawCost!==undefined && rawCost!=="" && Number.isFinite(Number(rawCost)) && Number(rawCost)>0) ? Number(rawCost) : null;
     return {
       product_id:x.productId,
       name:x.name,
@@ -300,8 +309,8 @@ async function whatsapp(){
       cost_price:cost
     };
   });
-  const totalCost=orderItems.reduce((sum,item)=>sum+(Number(item.cost_price)||0)*(Number(item.quantity)||0),0);
-  const profitAmount=subtotal-totalCost;
+  // Keep the item list in the existing orders.items column. Admin reads this
+  // snapshot directly, so the order does not depend on current product records.
   const orderPayload={order_number:orderNumber,customer_name:name,mobile:phone,address:address,area:"Mulund",items:orderItems,total_amount:total,payment_method:payment,status:"Pending"};
   const {error}=await supabaseClient.from("orders").insert([orderPayload]);
   if(error){console.error(error);alert("Order could not be placed. Please try again.");return;}
