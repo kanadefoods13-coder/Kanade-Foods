@@ -312,11 +312,8 @@ async function whatsapp(){
   if(!name||!phone||!address){alert("Please fill your name, mobile number and Mulund delivery address.");return;}
   if(!/^[0-9+\-\s]{10,15}$/.test(phone)){alert("Please enter a valid mobile number.");return;}
 
-  // Open a tab immediately during the click. This avoids browser popup blocking
-  // while the database request is running.
-  const whatsappTab=window.open("about:blank","_blank");
-  if(!whatsappTab){alert("Please allow pop-ups for kanadefoods.in, then click Confirm Order once again.");return;}
-
+  // No popup is opened. WhatsApp will be opened in the current tab after
+  // the order is successfully saved.
   isPlacingOrder=true;
   updateCart();
 
@@ -333,7 +330,6 @@ async function whatsapp(){
     const unavailable=latestProducts.filter(p=>String(p.status||"").trim().toLowerCase()==="out of stock");
     if(unavailable.length){
       await loadProductsFromSupabase();
-      whatsappTab.close();
       alert("Sorry! "+unavailable.map(p=>p.name).join(", ")+" is now Out of Stock. Your order was not placed. Please update your cart.");
       return;
     }
@@ -381,14 +377,14 @@ Mobile: ${phone}
 Delivery Area: Mulund
 Address: ${address}`;
 
-    alert("Order placed successfully! Order No: "+orderNumber);
     cart=[];
     updateCart();
     render();
-    whatsappTab.location.href="https://wa.me/918104130330?text="+encodeURIComponent(message);
+    // Same-tab redirect avoids popup permission. Android will open WhatsApp
+    // or WhatsApp Business if installed; otherwise wa.me opens in the browser.
+    window.location.href="https://wa.me/918104130330?text="+encodeURIComponent(message);
   }catch(error){
     console.error("Order placement error:",error);
-    try{whatsappTab.close();}catch(_){}
     alert(error.message||"Order could not be placed. Please try again.");
   }finally{
     isPlacingOrder=false;
