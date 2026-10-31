@@ -8,30 +8,10 @@
 <script src="/supabase-config.js"></script>
 <style>
 *{box-sizing:border-box}:root{--green:#0b5b2a;--green2:#16833d;--light:#edf8eb;--orange:#f47721;--red:#c62828;--blue:#2878c8;--ink:#17351e;--muted:#68756d;--line:#e2ebe1;--bg:#f5f8f4}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--ink)}button,input,select{font:inherit}button{cursor:pointer}header{background:linear-gradient(135deg,#075522,#19a347);color:#fff;padding:20px}.brand{font-size:24px;font-weight:900}.tag{margin-top:5px;font-size:13px}nav{background:#fff;border-bottom:1px solid var(--line);display:flex;gap:6px;padding:10px 14px;overflow:auto;position:sticky;top:0;z-index:100}nav button{border:0;background:#eef7ec;color:var(--ink);padding:11px 15px;border-radius:10px;font-weight:800;white-space:nowrap}nav button.active{background:var(--green);color:#fff}main{max-width:1250px;margin:auto;padding:20px}.tab{display:none}.tab.active{display:block}h2{margin-top:0}.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:13px}.card,.panel,.form{background:#fff;border:1px solid var(--line);border-radius:17px;padding:16px;box-shadow:0 4px 15px #00000008}.card-title{color:var(--muted);font-size:12px;font-weight:700}.num{margin-top:7px;font-size:24px;font-weight:900;color:var(--green)}.dashboard-grid{display:grid;grid-template-columns:1.4fr .8fr;gap:16px;margin-top:18px}.panel h3{margin-top:0}.chart{height:260px;display:flex;align-items:end;gap:13px;padding:20px 5px 0;border-bottom:1px solid #ddd}.bar-wrap{flex:1;height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center}.bar{width:65%;min-height:3px;background:linear-gradient(#19a347,#0b5b2a);border-radius:7px 7px 0 0}.bar-label{font-size:10px;color:var(--muted);margin-top:7px}.bar-value{font-size:10px;font-weight:800;margin-bottom:4px}.status{display:inline-block;padding:6px 9px;border-radius:8px;font-size:11px;font-weight:900}.pending{background:#fff4d6;color:#9b6900}.received{background:#e5f1ff;color:#2866a5}.preparing{background:#fff0dc;color:#b15d00}.delivery{background:#e6f5ff;color:#1374a3}.delivered{background:#e6f7e4;color:#18783a}.cancelled{background:#ffe6e3;color:#b42318}.table-wrap{overflow:auto;background:#fff;border-radius:15px}table{width:100%;border-collapse:collapse;min-width:750px}th,td{padding:12px;border-bottom:1px solid #edf1ec;text-align:left;font-size:13px}th{background:#f5f9f4;color:#526057;font-size:11px;text-transform:uppercase}tr:hover td{background:#fbfdfb}.search{width:100%;border:1px solid #d8e4d6;border-radius:10px;padding:11px;margin:8px 0 14px;outline:none}.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}.filters button{border:1px solid #d7e4d5;background:#fff;padding:8px 12px;border-radius:9px;font-weight:700}.filters button.active{background:var(--green);color:#fff}.btn{border:0;border-radius:9px;padding:9px 12px;font-weight:800;color:#fff}.btn.green{background:var(--green)}.btn.orange{background:var(--orange)}.btn.blue{background:var(--blue)}.btn.red{background:var(--red)}.btn.gray{background:#777}.form{margin-bottom:20px}.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.form-group label{display:block;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:4px}.form-group input,.form-group select{width:100%;padding:10px;border:1px solid #d7e4d5;border-radius:9px}.section-label{margin:18px 0 8px;font-weight:900;color:var(--green)}.product-img{width:52px;height:52px;object-fit:cover;border-radius:10px;border:1px solid #ddd}.modal{display:none;position:fixed;inset:0;background:#0008;z-index:999;padding:15px;overflow:auto}.modal.open{display:block}.modal-box{max-width:700px;margin:30px auto;background:#fff;border-radius:20px;padding:20px;box-shadow:0 25px 80px #0005}.modal-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:15px}.close{border:0;background:#edf5eb;border-radius:9px;padding:8px 11px}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.detail-box{background:#f7faf6;border:1px solid var(--line);padding:12px;border-radius:10px}.detail-box small{display:block;color:var(--muted);margin-bottom:4px}.profit{color:#16833d;font-weight:900}.category-row td{position:sticky;left:0}.top-product{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #edf1ec}.report-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}@media(max-width:1000px){.cards{grid-template-columns:repeat(3,1fr)}.dashboard-grid{grid-template-columns:1fr}}@media(max-width:700px){main{padding:12px}header{padding:16px}.brand{font-size:19px}.cards{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr}.report-cards{grid-template-columns:repeat(2,1fr)}.detail-grid{grid-template-columns:1fr}}
-
-.auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#075522,#19a347)}
-.auth-card{width:100%;max-width:420px;background:#fff;padding:28px;border-radius:18px;box-shadow:0 18px 60px #0003}
-.auth-card h1{margin:0 0 8px;color:var(--green);font-size:24px}.auth-card p{color:var(--muted);font-size:14px;line-height:1.5}
-.auth-card label{display:block;font-size:13px;font-weight:800;margin:14px 0 5px}.auth-card input{width:100%;padding:12px;border:1px solid #d7e4d5;border-radius:9px}
-.auth-card button{width:100%;margin-top:18px}.auth-error{color:#b42318;font-size:13px;margin-top:12px;white-space:pre-wrap}
-body:not(.authenticated) header,body:not(.authenticated) nav,body:not(.authenticated) main,body:not(.authenticated) .modal{display:none!important}
-body.authenticated #loginScreen{display:none!important}.header-actions{display:flex;align-items:center;justify-content:space-between;gap:12px}.logout-btn{background:#fff;color:var(--green);border:0;border-radius:9px;padding:9px 12px;font-weight:800;white-space:nowrap}
 </style>
 </head>
 <body>
-<section id="loginScreen" class="auth-screen">
-  <form id="adminLoginForm" class="auth-card">
-    <h1>KANADE FOODS</h1>
-    <p>Admin Panel Login</p>
-    <label for="adminEmail">Admin Email</label>
-    <input id="adminEmail" type="email" autocomplete="username" required placeholder="Enter admin email">
-    <label for="adminPassword">Password</label>
-    <input id="adminPassword" type="password" autocomplete="current-password" required placeholder="Enter password">
-    <button id="adminLoginButton" class="btn green" type="submit">Login</button>
-    <div id="adminLoginError" class="auth-error" role="alert"></div>
-  </form>
-</section>
-<header><div class="header-actions"><div><div class="brand">KANADE FOODS • ADMIN PANEL</div><div class="tag">CHOP DROP DONE | Products • Orders • Customers • Reports</div></div><button class="logout-btn" type="button" onclick="adminLogout()">Log Out</button></div></header>
+<header><div class="brand">KANADE FOODS • ADMIN PANEL</div><div class="tag">CHOP DROP DONE | Products • Orders • Customers • Reports</div></header>
 <nav id="nav"><button class="active" onclick="showTab('dashboard',this)">📊 Dashboard</button><button onclick="showTab('orders',this)">📦 Orders</button><button onclick="showTab('history',this)">🕘 History</button><button onclick="showTab('products',this)">🥦 Products</button><button onclick="showTab('customers',this)">👤 Customers</button><button onclick="showTab('reports',this)">📈 Reports</button></nav>
 <main>
 <section id="dashboard" class="tab active"><h2>Dashboard</h2><div class="cards">
@@ -46,13 +26,13 @@ body.authenticated #loginScreen{display:none!important}.header-actions{display:f
 <button onclick="setProductCategory('Ready-to-Cook Mixes',this)">🍲 Ready-to-Cook Mixes</button>
 <button onclick="setProductCategory('Fresh Sprouts',this)">🌱 Fresh Sprouts</button>
 </div><div class="table-wrap"><table><thead><tr><th>Image</th><th>Product</th><th>Category</th><th>Whole<br>250/500/1kg</th><th>Chop<br>250/500/1kg</th><th>Cost<br>250/500/1kg</th><th>Status</th><th>Action</th></tr></thead><tbody id="productsTable"></tbody></table></div></section>
-<section id="customers" class="tab"><h2>👤 Customers</h2><input id="customerSearch" class="search" placeholder="Search customer / mobile" oninput="renderCustomers()"><div class="table-wrap"><table><thead><tr><th>Name</th><th>Mobile</th><th>Area</th><th>Orders</th><th>Total Spent</th><th>Last Order</th><th>Action</th></tr></thead><tbody id="customersTable"></tbody></table></div></section>
+<section id="customers" class="tab"><h2>👤 Customers</h2><input id="customerSearch" class="search" placeholder="Search customer / mobile" oninput="renderCustomers()"><div class="table-wrap"><table><thead><tr><th>Name</th><th>Mobile</th><th>Area</th><th>Orders</th><th>Total Spent</th><th>Last Order</th></tr></thead><tbody id="customersTable"></tbody></table></div></section>
 <section id="reports" class="tab"><h2>📈 Business Reports</h2><div class="report-cards"><div class="card"><div class="card-title">Total Sales</div><div class="num" id="reportSales">₹0</div></div><div class="card"><div class="card-title">Total Profit</div><div class="num" id="reportProfit">₹0</div></div><div class="card"><div class="card-title">Total Orders</div><div class="num" id="reportOrders">0</div></div><div class="card"><div class="card-title">Average Order</div><div class="num" id="reportAverage">₹0</div></div></div><div class="panel"><h3>📊 Product Performance</h3><div class="table-wrap"><table><thead><tr><th>Product</th><th>Quantity Sold</th><th>Sales</th><th>Profit</th></tr></thead><tbody id="productReport"></tbody></table></div></div></section>
 </main>
 <div id="orderModal" class="modal"><div class="modal-box"><div class="modal-head"><h2>📦 Order Details</h2><button class="close" onclick="closeModal('orderModal')">✕</button></div><div id="orderDetails"></div></div></div>
 <div id="productModal" class="modal"><div class="modal-box"><div class="modal-head"><h2>✏️ Edit Product</h2><button class="close" onclick="closeModal('productModal')">✕</button></div><input type="hidden" id="editId"><div class="form-grid"><div class="form-group"><label>Product Name</label><input id="editName"></div><div class="form-group"><label>Category</label><select id="editCategory"><option>Fresh Cut Vegetables</option><option>Fresh Cut Fruits</option><option>Ready-to-Cook Mixes</option><option>Fresh Sprouts</option></select></div><div class="form-group"><label>Status</label><select id="editStatus"><option>Available</option><option>Out of Stock</option></select></div><div class="form-group"><label>Change Product Image (optional)</label><input id="editImage" type="file" accept="image/*" onchange="previewEditImage(event)"><div style="margin-top:8px"><img id="editImagePreview" class="product-img" alt="Current product image" style="width:90px;height:90px;object-fit:cover;display:none"><span id="editImageHint" style="font-size:12px;color:#68756d">Select a new image only if you want to replace it.</span></div></div></div><div class="section-label">🟢 Whole Price</div><div class="form-grid"><div class="form-group"><label>250g</label><input id="editWhole250" type="number"></div><div class="form-group"><label>500g</label><input id="editWhole500" type="number"></div><div class="form-group"><label>1kg</label><input id="editWhole1000" type="number"></div></div><div class="section-label">🔪 Chopped Price</div><div class="form-grid"><div class="form-group"><label>250g</label><input id="editChop250" type="number"></div><div class="form-group"><label>500g</label><input id="editChop500" type="number"></div><div class="form-group"><label>1kg</label><input id="editChop1000" type="number"></div></div><div class="section-label">💰 Cost Price</div><div class="form-grid"><div class="form-group"><label>250g Cost</label><input id="editCost250" type="number"></div><div class="form-group"><label>500g Cost</label><input id="editCost500" type="number"></div><div class="form-group"><label>1kg Cost</label><input id="editCost1000" type="number"></div></div><button class="btn green" style="margin-top:15px" onclick="saveProductEdit()">Save Changes</button></div></div>
 <script>
-let products=[];let orders=[];let customers=[];let historyFilter="all";let productCategoryFilter="all";
+let products=[];let orders=[];let historyFilter="all";let productCategoryFilter="all";
 function showTab(id,button){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));const el=document.getElementById(id);if(!el)return;el.classList.add('active');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));if(button)button.classList.add('active');renderAll()}
 function num(v){return Number(v)||0}function money(v){return '₹'+Math.round(num(v)).toLocaleString('en-IN')}
 function orderDate(o){return o.created_at?new Date(o.created_at):new Date()}function isToday(o){const d=orderDate(o),n=new Date();return d.getDate()===n.getDate()&&d.getMonth()===n.getMonth()&&d.getFullYear()===n.getFullYear()}
@@ -113,9 +93,9 @@ function parseItems(o){
 }
 function renderTopProducts(){const map={};orders.filter(o=>o.status!=='Cancelled').forEach(o=>parseItems(o).forEach(item=>{const name=item.name||'Unknown';map[name]=(map[name]||0)+num(item.quantity||item.qty)}));const sorted=Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,5),box=document.getElementById('topProducts');if(!sorted.length){box.innerHTML="<p style='color:#68756d'>No product sales yet.</p>";return}box.innerHTML=sorted.map((x,i)=>`<div class="top-product"><span><b>${i+1}. ${escapeHTML(x[0])}</b></span><strong>${x[1]} sold</strong></div>`).join('')}
 function statusOptions(current){return['Pending','Received','Preparing','Out for Delivery','Delivered','Cancelled'].map(s=>`<option ${s===current?'selected':''}>${s}</option>`).join('')}
-function renderOrders(){const search=(document.getElementById('orderSearch').value||'').toLowerCase().trim();const list=orders.filter(o=>(o.order_number+' '+o.customer_name+' '+o.mobile).toLowerCase().includes(search));document.getElementById('ordersTable').innerHTML=list.map(o=>`<tr><td><b>${escapeHTML(o.order_number||'')}</b></td><td>${escapeHTML(o.customer_name||'')}</td><td>${escapeHTML(o.mobile||'')}</td><td><b>${money(o.total_amount)}</b></td><td class="profit">${getOrderProfit(o)===null?'Cost not set':money(getOrderProfit(o))}</td><td>${escapeHTML(o.payment_method||'')}</td><td><span class="status ${statusClass(o.status)}">${escapeHTML(o.status||'')}</span></td><td><button class="btn blue" onclick="viewOrder(this.dataset.id)" data-id="${escapeHTML(String(o.id))}">View</button> <select onchange="changeStatus(this.dataset.id,this.value)" data-id="${escapeHTML(String(o.id))}" style="padding:7px;border-radius:8px">${statusOptions(o.status)}</select></td></tr>`).join('')}
-async function changeStatus(id,status){const order=orders.find(o=>String(o.id)===String(id));if(!order)return;const {error}=await supabaseClient.from('orders').update({status}).eq('id',id);if(error){alert('Status update failed: '+error.message);return}order.status=status;renderAll();sendWhatsAppStatus(order,status)}
-function sendWhatsAppStatus(order,status){let mobile=String(order.mobile||'').replace(/\D/g,'');if(mobile.startsWith('0'))mobile=mobile.substring(1);if(mobile.length===10)mobile='91'+mobile;if(!mobile)return;let msg='';if(status==='Received')msg=`Hello ${order.customer_name},\n\nYour Kanade Foods order ${order.order_number} has been received successfully. ✅\n\nThank you for ordering with Kanade Foods - Chop Drop Done!`;else if(status==='Preparing')msg=`Hello ${order.customer_name},\n\nYour Kanade Foods order ${order.order_number} is now being prepared. 🥗\n\nFreshly cut and carefully packed!`;else if(status==='Out for Delivery')msg=`Hello ${order.customer_name},\n\nYour Kanade Foods order ${order.order_number} is out for delivery. 🚚\n\nYour order is on the way!`;else if(status==='Delivered')msg=`Hello ${order.customer_name},\n\nYour Kanade Foods order ${order.order_number} has been delivered successfully. 🎉\n\nThank you for choosing Kanade Foods - Chop Drop Done!`;else return;window.open('https://wa.me/'+mobile+'?text='+encodeURIComponent(msg),'_blank')}
+function renderOrders(){const search=(document.getElementById('orderSearch').value||'').toLowerCase().trim();const list=orders.filter(o=>(o.order_number+' '+o.customer_name+' '+o.mobile).toLowerCase().includes(search));document.getElementById('ordersTable').innerHTML=list.map(o=>`<tr><td><b>${escapeHTML(o.order_number||'')}</b></td><td>${escapeHTML(o.customer_name||'')}</td><td>${escapeHTML(o.mobile||'')}</td><td><b>${money(o.total_amount)}</b></td><td class="profit">${getOrderProfit(o)===null?'Cost not set':money(getOrderProfit(o))}</td><td>${escapeHTML(o.payment_method||'')}</td><td><span class="status ${statusClass(o.status)}">${escapeHTML(o.status||'')}</span></td><td><button class="btn blue" onclick="viewOrder(this.dataset.id)" data-id="${escapeHTML(String(o.id))}">View</button> <select onchange="changeStatus(this.dataset.id,this.value)" data-id="${escapeHTML(String(o.id))}" style="padding:7px;border-radius:8px">${statusOptions(o.status)}</select> <button class="btn" style="background:#16834a;color:white;margin-top:5px" onclick="sendWhatsAppStatus(this.dataset.id)" data-id="${escapeHTML(String(o.id))}">Send WhatsApp</button></td></tr>`).join('')}
+async function changeStatus(id,status){const order=orders.find(o=>String(o.id)===String(id));if(!order)return;const {error}=await supabaseClient.from('orders').update({status}).eq('id',id);if(error){alert('Status update failed: '+error.message);return}order.status=status;renderAll();alert('Order status updated successfully. WhatsApp message can be sent separately using the Send WhatsApp button.')}
+function sendWhatsAppStatus(id){const order=orders.find(o=>String(o.id)===String(id));if(!order)return;let mobile=String(order.mobile||'').replace(/\D/g,'');if(mobile.startsWith('0'))mobile=mobile.substring(1);if(mobile.length===10)mobile='91'+mobile;if(!mobile||mobile.length<11){alert('Customer mobile number is missing or invalid.');return}const status=order.status;let msg='';if(status==='Received')msg=`Hello ${order.customer_name},\n\nYour Kanade Foods order ${order.order_number} has been received successfully. ✅\n\nThank you for ordering with Kanade Foods - Chop Drop Done!`;else if(status==='Preparing')msg=`Hello ${order.customer_name},\n\nYour Kanade Foods order ${order.order_number} is now being prepared. 🥗\n\nFreshly cut and carefully packed!`;else if(status==='Out for Delivery')msg=`Hello ${order.customer_name},\n\nYour Kanade Foods order ${order.order_number} is out for delivery. 🚚\n\nYour order is on the way!`;else if(status==='Delivered')msg=`Hello ${order.customer_name},\n\nYour Kanade Foods order ${order.order_number} has been delivered successfully. 🎉\n\nThank you for choosing Kanade Foods - Chop Drop Done!`;else if(status==='Cancelled')msg=`Hello ${order.customer_name},\n\nYour Kanade Foods order ${order.order_number} has been cancelled. For any help, please contact us.\n\n- Kanade Foods`;else{alert('Please update the order status before sending a WhatsApp message.');return}const url='https://wa.me/'+mobile+'?text='+encodeURIComponent(msg);window.open(url,'_blank','noopener,noreferrer')}
 function setHistoryFilter(filter,button){historyFilter=filter;document.querySelectorAll('#history .filters button').forEach(x=>x.classList.remove('active'));button.classList.add('active');renderHistory()}
 function renderHistory(){const search=(document.getElementById('historySearch').value||'').toLowerCase().trim(),now=new Date();const list=orders.filter(o=>{const d=orderDate(o);let ok=true;if(historyFilter==='today')ok=sameDay(d,now);else if(historyFilter==='7'){const start=new Date();start.setDate(start.getDate()-6);start.setHours(0,0,0,0);ok=d>=start}else if(historyFilter==='month')ok=d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();return ok&&(o.order_number+' '+o.customer_name+' '+o.mobile).toLowerCase().includes(search)});document.getElementById('historyTable').innerHTML=list.map(o=>`<tr><td><b>${escapeHTML(o.order_number||'')}</b></td><td>${orderDate(o).toLocaleString('en-IN')}</td><td>${escapeHTML(o.customer_name||'')}</td><td>${money(o.total_amount)}</td><td class="profit">${getOrderProfit(o)===null?'Cost not set':money(getOrderProfit(o))}</td><td>${escapeHTML(o.payment_method||'')}</td><td><span class="status ${statusClass(o.status)}">${escapeHTML(o.status||'')}</span></td><td><button class="btn blue" onclick="viewOrder(this.dataset.id)" data-id="${escapeHTML(String(o.id))}">View</button></td></tr>`).join('')}
 function viewOrder(id){
@@ -277,9 +257,7 @@ async function saveProductEdit(){
 }
 async function toggleProduct(id){const p=products.find(x=>String(x.id)===String(id));if(!p)return;const newStatus=p.status==='Available'?'Out of Stock':'Available';const {error}=await supabaseClient.from('products').update({status:newStatus}).eq('id',id);if(error){alert('Status update failed: '+error.message);return}await loadProducts()}
 async function deleteProduct(id){const p=products.find(x=>String(x.id)===String(id));if(!p)return;if(!confirm('Delete '+p.name+'?'))return;const {error}=await supabaseClient.from('products').delete().eq('id',id);if(error){alert('Delete failed: '+error.message);return}await loadProducts()}
-async function loadCustomers(){const {data,error}=await supabaseClient.from('customer_directory').select('*').order('created_at',{ascending:false});if(error){console.error('Customers load failed:',error);alert('Customers load failed: '+error.message);return}customers=data||[];renderCustomers()}
-async function deleteCustomer(mobile){const customer=customers.find(c=>String(c.mobile)===String(mobile));if(!customer)return;if(!confirm('Hide '+(customer.name||customer.mobile)+' from Customers? Old orders and reports will be preserved.'))return;const {error}=await supabaseClient.from('customer_directory').update({is_deleted:true}).eq('mobile',customer.mobile);if(error){console.error(error);alert('Customer delete failed: '+error.message);return}customer.is_deleted=true;renderCustomers();alert('Customer removed from Customers list. Old orders are safe.')}
-function renderCustomers(){const search=(document.getElementById('customerSearch').value||'').toLowerCase().trim(),orderMap={};orders.forEach(o=>{const mobile=String(o.mobile||'').trim();if(!mobile)return;if(!orderMap[mobile])orderMap[mobile]={orders:0,spent:0,last:null};orderMap[mobile].orders++;if(o.status!=='Cancelled')orderMap[mobile].spent+=num(o.total_amount);const d=orderDate(o);if(!orderMap[mobile].last||d>orderMap[mobile].last)orderMap[mobile].last=d});const visible=customers.filter(c=>!c.is_deleted&&((String(c.name||'')+' '+String(c.mobile||'')+' '+String(c.area||'')).toLowerCase().includes(search)));document.getElementById('customersTable').innerHTML=visible.map(c=>{const stats=orderMap[String(c.mobile||'').trim()]||{orders:0,spent:0,last:null};return `<tr><td><b>${escapeHTML(c.name||'Customer')}</b></td><td>${escapeHTML(c.mobile||'')}</td><td>${escapeHTML(c.area||'Mulund')}</td><td>${stats.orders}</td><td><b>${money(stats.spent)}</b></td><td>${stats.last?stats.last.toLocaleString('en-IN'):''}</td><td><button class="btn red" onclick="deleteCustomer(this.dataset.mobile)" data-mobile="${escapeHTML(c.mobile||'')}">Delete</button></td></tr>`}).join('')}
+function renderCustomers(){const search=(document.getElementById('customerSearch').value||'').toLowerCase().trim(),map={};orders.forEach(o=>{const mobile=String(o.mobile||'');if(!map[mobile])map[mobile]={name:o.customer_name||'Customer',mobile,area:o.area||'Mulund',orders:0,spent:0,last:null};map[mobile].orders++;if(o.status!=='Cancelled')map[mobile].spent+=num(o.total_amount);const d=orderDate(o);if(!map[mobile].last||d>map[mobile].last)map[mobile].last=d});const customers=Object.values(map).filter(c=>(c.name+' '+c.mobile).toLowerCase().includes(search));document.getElementById('customersTable').innerHTML=customers.map(c=>`<tr><td><b>${escapeHTML(c.name)}</b></td><td>${escapeHTML(c.mobile)}</td><td>${escapeHTML(c.area)}</td><td>${c.orders}</td><td><b>${money(c.spent)}</b></td><td>${c.last?c.last.toLocaleString('en-IN'):''}</td></tr>`).join('')}
 function renderReports(){
  const validOrders=orders.filter(o=>o.status!=='Cancelled'),sales=validOrders.reduce((s,o)=>s+num(o.total_amount),0),knownOrders=validOrders.filter(o=>getOrderProfit(o)!==null),profit=knownOrders.reduce((s,o)=>s+num(getOrderProfit(o)),0),avg=validOrders.length?sales/validOrders.length:0;
  document.getElementById('reportSales').textContent=money(sales);document.getElementById('reportProfit').textContent=knownOrders.length===validOrders.length?money(profit):(knownOrders.length?money(profit)+'*':'Cost not set');document.getElementById('reportOrders').textContent=validOrders.length;document.getElementById('reportAverage').textContent=money(avg);
@@ -289,71 +267,9 @@ function renderReports(){
 function closeModal(id){document.getElementById(id).classList.remove('open')}
 function escapeHTML(value){return String(value??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;')}
 function renderAll(){renderDashboard();renderOrders();renderHistory();renderProducts();renderCustomers();renderReports()}
-let adminAuthStarted = false;
-let adminRealtimeChannelsStarted = false;
-
-async function activateAdmin(session) {
-  if (!session || !session.user) return;
-  const wasAuthenticated = document.body.classList.contains('authenticated');
-  document.body.classList.add('authenticated');
-  document.getElementById('adminLoginError').textContent = '';
-  if (wasAuthenticated) return;
-  await Promise.all([loadProducts(), loadOrders(), loadCustomers()]);
-  if (!adminRealtimeChannelsStarted) {
-    supabaseClient.channel('admin-orders-live').on('postgres_changes',{event:'*',schema:'public',table:'orders'},()=>loadOrders()).subscribe();
-    supabaseClient.channel('admin-products-live').on('postgres_changes',{event:'*',schema:'public',table:'products'},()=>loadProducts()).subscribe();
-    adminRealtimeChannelsStarted = true;
-  }
-}
-
-async function adminLogout() {
-  const { error } = await supabaseClient.auth.signOut();
-  if (error) {
-    alert('Logout failed: ' + error.message);
-    return;
-  }
-  document.body.classList.remove('authenticated');
-  document.getElementById('adminPassword').value = '';
-}
-
-document.getElementById('adminLoginForm').addEventListener('submit', async function(event) {
-  event.preventDefault();
-  const button = document.getElementById('adminLoginButton');
-  const errorBox = document.getElementById('adminLoginError');
-  button.disabled = true;
-  button.textContent = 'Logging in...';
-  errorBox.textContent = '';
-  const email = document.getElementById('adminEmail').value.trim();
-  const password = document.getElementById('adminPassword').value;
-  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-  button.disabled = false;
-  button.textContent = 'Login';
-  if (error) {
-    errorBox.textContent = 'Login failed: ' + error.message;
-    return;
-  }
-  await activateAdmin(data.session);
-});
-
-async function initializeAdminAuth() {
-  if (adminAuthStarted) return;
-  adminAuthStarted = true;
-  const { data, error } = await supabaseClient.auth.getSession();
-  if (error) {
-    document.getElementById('adminLoginError').textContent = 'Authentication error: ' + error.message;
-    return;
-  }
-  if (data.session) await activateAdmin(data.session);
-  supabaseClient.auth.onAuthStateChange((_event, session) => {
-    if (session) {
-      activateAdmin(session);
-    } else {
-      document.body.classList.remove('authenticated');
-    }
-  });
-}
-
-initializeAdminAuth();
+supabaseClient.channel('admin-orders-live').on('postgres_changes',{event:'*',schema:'public',table:'orders'},()=>loadOrders()).subscribe();
+supabaseClient.channel('admin-products-live').on('postgres_changes',{event:'*',schema:'public',table:'products'},()=>loadProducts()).subscribe();
+loadProducts();loadOrders();
 </script>
 </body>
 </html>
