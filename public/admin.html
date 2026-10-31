@@ -29,6 +29,17 @@ body.authenticated #loginScreen{display:none!important}.header-actions{display:f
     <input id="adminPassword" type="password" autocomplete="current-password" required placeholder="Enter password">
     <button id="adminLoginButton" class="btn green" type="submit">Login</button>
     <div id="adminLoginError" class="auth-error" role="alert"></div>
+    <button type="button" class="btn" style="background:transparent;color:#0b5b2a;border:1px solid #d7e4d5" onclick="sendAdminPasswordRecovery()">Forgot Password?</button>
+  </form>
+  <form id="adminRecoveryForm" class="auth-card" style="display:none">
+    <h1>KANADE FOODS</h1>
+    <p>Set a new admin password</p>
+    <label for="recoveryPassword">New Password</label>
+    <input id="recoveryPassword" type="password" autocomplete="new-password" minlength="8" required placeholder="Enter new password">
+    <label for="recoveryPasswordConfirm">Confirm New Password</label>
+    <input id="recoveryPasswordConfirm" type="password" autocomplete="new-password" minlength="8" required placeholder="Confirm new password">
+    <button id="recoverySaveButton" class="btn green" type="submit">Update Password</button>
+    <div id="recoveryError" class="auth-error" role="alert"></div>
   </form>
 </section>
 <header><div class="header-actions"><div><div class="brand">KANADE FOODS • ADMIN PANEL</div><div class="tag">CHOP DROP DONE | Products • Orders • Customers • Reports</div></div><button class="logout-btn" type="button" onclick="adminLogout()">Log Out</button></div></header>
@@ -291,6 +302,69 @@ function escapeHTML(value){return String(value??'').replace(/&/g,'&amp;').replac
 function renderAll(){renderDashboard();renderOrders();renderHistory();renderProducts();renderCustomers();renderReports()}
 let adminAuthStarted = false;
 let adminRealtimeChannelsStarted = false;
+let adminPasswordSetupPending = false;
+
+function showAdminRecoveryForm() {
+  adminPasswordSetupPending = true;
+  document.body.classList.remove('authenticated');
+  document.getElementById('adminLoginForm').style.display = 'none';
+  document.getElementById('adminRecoveryForm').style.display = 'block';
+  document.getElementById('recoveryError').textContent = '';
+}
+
+function getAdminEmailActionType() {
+  const hash = window.location.hash.startsWith('#') ? window.location.hash.slice(1) : window.location.hash;
+  return new URLSearchParams(hash).get('type') || '';
+}
+
+async function sendAdminPasswordRecovery() {
+  const email = document.getElementById('adminEmail').value.trim();
+  const errorBox = document.getElementById('adminLoginError');
+  if (!email) {
+    errorBox.textContent = 'Please enter your admin email first.';
+    document.getElementById('adminEmail').focus();
+    return;
+  }
+  errorBox.textContent = 'Sending recovery email...';
+  const redirectTo = window.location.origin + window.location.pathname;
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo });
+  errorBox.textContent = error ? ('Recovery email failed: ' + error.message) : 'Password recovery email sent. Open the email link to set a new password.';
+}
+
+document.getElementById('adminRecoveryForm').addEventListener('submit', async function(event) {
+  event.preventDefault();
+  const password = document.getElementById('recoveryPassword').value;
+  const confirm = document.getElementById('recoveryPasswordConfirm').value;
+  const errorBox = document.getElementById('recoveryError');
+  const button = document.getElementById('recoverySaveButton');
+  errorBox.textContent = '';
+  if (password.length < 8) {
+    errorBox.textContent = 'Password must be at least 8 characters.';
+    return;
+  }
+  if (password !== confirm) {
+    errorBox.textContent = 'Passwords do not match.';
+    return;
+  }
+  button.disabled = true;
+  button.textContent = 'Updating...';
+  const { error } = await supabaseClient.auth.updateUser({ password });
+  button.disabled = false;
+  button.textContent = 'Update Password';
+  if (error) {
+    errorBox.textContent = 'Password update failed: ' + error.message;
+    return;
+  }
+  document.getElementById('recoveryPassword').value = '';
+  document.getElementById('recoveryPasswordConfirm').value = '';
+  adminPasswordSetupPending = false;
+  document.getElementById('adminRecoveryForm').style.display = 'none';
+  document.getElementById('adminLoginForm').style.display = 'block';
+  document.getElementById('adminLoginError').textContent = 'Password updated successfully. Please log in with your new password.';
+  await supabaseClient.auth.signOut();
+  // Remove one-time invite/recovery tokens from the address bar after password setup.
+  window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+});
 
 async function activateAdmin(session) {
   if (!session || !session.user) return;
@@ -343,11 +417,21 @@ async function initializeAdminAuth() {
     document.getElementById('adminLoginError').textContent = 'Authentication error: ' + error.message;
     return;
   }
-  if (data.session) await activateAdmin(data.session);
-  supabaseClient.auth.onAuthStateChange((_event, session) => {
-    if (session) {
+  const emailActionType = getAdminEmailActionType();
+  const isPasswordSetupLink = emailActionType === 'invite' || emailActionType === 'recovery';
+  if (isPasswordSetupLink) {
+    showAdminRecoveryForm();
+  } else if (data.session) {
+    await activateAdmin(data.session);
+  }
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (event === 'PASSWORD_RECOVERY' || getAdminEmailActionType() === 'invite' || getAdminEmailActionType() === 'recovery') {
+      showAdminRecoveryForm();
+      return;
+    }
+    if (session && !adminPasswordSetupPending) {
       activateAdmin(session);
-    } else {
+    } else if (!session) {
       document.body.classList.remove('authenticated');
     }
   });
