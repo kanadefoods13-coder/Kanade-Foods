@@ -39,7 +39,7 @@ main{max-width:1180px;margin:auto;padding:10px 18px 70px}.notice{display:flex;al
 .popup-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:18px}.popup-price{font-size:23px;font-weight:950;color:var(--g)}.popup-add{width:100%;border:0;background:var(--o);color:#fff;border-radius:12px;padding:14px;font-weight:950;font-size:15px;margin-top:15px}
 .cartPanel{position:fixed;right:16px;top:76px;width:min(430px,calc(100vw - 32px));height:calc(100vh - 92px);background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:0 22px 60px #0003;z-index:100;display:none;flex-direction:column;overflow:hidden}.cartPanel.open{display:flex}.cartPanel .items{min-height:0;flex:1 1 auto}
 .cartHead{padding:16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.cartHead h2{margin:0}.close{border:0;background:#eef5ec;border-radius:9px;padding:7px 10px}.items{overflow:auto;padding:0 16px;flex:1}.item{padding:13px 0;border-bottom:1px solid #edf1ec}.itemtop{display:flex;justify-content:space-between;gap:8px}.itemmeta{font-size:12px;color:var(--muted);margin-top:3px}.qty{display:flex;align-items:center;gap:7px;margin-top:8px}.qty button{border:0;background:#eaf5e8;color:var(--g);border-radius:8px;padding:5px 10px;font-weight:900}.qty .remove{background:#fff1ed;color:#b4432d}
-.checkoutBox{border-top:1px solid var(--line);padding:14px;flex:0 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}.sum{display:grid;gap:5px;font-size:13px}.total{font-size:19px;font-weight:950;color:var(--g);display:flex;justify-content:space-between;margin:5px 0 10px}.field{width:100%;border:1px solid #dbe6d8;border-radius:10px;padding:10px;margin:4px 0;outline:none}.wa{width:100%;border:0;background:#18a34a;color:#fff;border-radius:11px;padding:12px;font-weight:950;margin-top:6px}
+.checkoutBox{border-top:1px solid var(--line);padding:14px;flex:0 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch}.sum{display:grid;gap:5px;font-size:13px}.total{font-size:19px;font-weight:950;color:var(--g);display:flex;justify-content:space-between;margin:5px 0 10px}.field{width:100%;border:1px solid #dbe6d8;border-radius:10px;padding:10px;margin:4px 0;outline:none}.wa{width:100%;border:0;background:#18a34a;color:#fff;border-radius:11px;padding:12px;font-weight:950;margin-top:6px}.wa:disabled{opacity:.65;cursor:wait}
 .track-order{max-width:1180px;margin:0 auto;padding:20px 18px 70px}.track-box{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;max-width:600px}.track-result{margin-top:15px;background:#f4f9f2;border:1px solid #dbe9d7;border-radius:12px;padding:15px}.track-result h3{margin-top:0;color:var(--g)}
 .float{position:fixed;right:17px;bottom:17px;background:var(--g);color:#fff;border:0;border-radius:16px;padding:13px 16px;font-weight:950;z-index:70;box-shadow:0 8px 24px #123c2040}
 footer{background:#083d1d;color:#eaf6e8;padding:30px 18px}.foot{max-width:1180px;margin:auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.foot strong{font-size:17px;color:#fff}.foot small{display:block;color:#bdd5bf;margin-top:5px}
@@ -92,7 +92,7 @@ footer{background:#083d1d;color:#eaf6e8;padding:30px 18px}.foot{max-width:1180px
 <input id="phone" class="field" placeholder="Mobile number">
 <textarea id="address" class="field" rows="2" placeholder="Delivery address in Mulund"></textarea>
 <select id="pay" class="field"><option>Cash on Delivery</option><option>UPI / QR Payment</option></select>
-<button class="wa" onclick="whatsapp()">Confirm Order on WhatsApp →</button>
+<button id="whatsappButton" class="wa" onclick="whatsapp()">Confirm Order on WhatsApp →</button>
 </div></aside>
 
 <section class="track-order"><div class="head"><h2>Track Your Order</h2></div>
@@ -127,8 +127,10 @@ footer{background:#083d1d;color:#eaf6e8;padding:30px 18px}.foot{max-width:1180px
 
 <script>
 let products=[],cat="Vegetables",cart=[],popupProductIndex=-1,popupType="Whole",popupQuantity=1;
+let isPlacingOrder=false;
+let productsLoadInProgress=false;
 
-// Delivery settings: change these two values whenever your policy changes.
+// Delivery settings: unchanged.
 const DELIVERY_FEE = 40;
 const FREE_DELIVERY_MINIMUM = 499;
 function getDeliveryCharge(subtotal){
@@ -136,35 +138,58 @@ function getDeliveryCharge(subtotal){
   return subtotal>=FREE_DELIVERY_MINIMUM ? 0 : DELIVERY_FEE;
 }
 
-async function loadProductsFromSupabase(){
-  const {data,error}=await supabaseClient.from("products").select("*").order("id",{ascending:true});
-  if(error){console.error("Products load error:",error);document.getElementById("products").innerHTML='<div style="grid-column:1/-1;background:#fff;padding:30px;text-align:center;border-radius:15px">Unable to load products.</div>';return;}
-  products=(data||[]).map(function(p){
-    let productCategory="Vegetables";
-    if(p.category==="Fresh Cut Fruits")productCategory="Fruits";
-    else if(p.category==="Ready-to-Cook Mixes")productCategory="Ready";
-    else if(p.category==="Fresh Sprouts")productCategory="Sprouts";
-
-    /* NEW: separate Whole and Chopped prices.
-       If old products have not yet been filled with Whole prices,
-       old price columns are used as a temporary fallback for Whole. */
-    const old250=Number(p.price_250g)||0,old500=Number(p.price_500g)||0,old1000=Number(p.price_1kg)||0;
-    return {
-      id:p.id,name:p.name||"",cat:productCategory,
-      emoji:p.category==="Fresh Cut Fruits"?"🍎":p.category==="Fresh Sprouts"?"🌱":p.category==="Ready-to-Cook Mixes"?"🥗":"🥦",
-      image:p.image_url||"",
-      prices:{
-        Whole:{250:Number(p.whole_price_250g)||old250,500:Number(p.whole_price_500g)||old500,1000:Number(p.whole_price_1kg)||old1000},
-        Chopped:{250:Number(p.chop_price_250g)||0,500:Number(p.chop_price_500g)||0,1000:Number(p.chop_price_1kg)||0}
-      },
-      costs:{250:Number(p.cost_price_250g)||0,500:Number(p.cost_price_500g)||0,1000:Number(p.cost_price_1kg)||0},
-      status:p.status||"Available"
-    };
-  });
-  render();
+function mapProduct(p){
+  let productCategory="Vegetables";
+  if(p.category==="Fresh Cut Fruits")productCategory="Fruits";
+  else if(p.category==="Ready-to-Cook Mixes")productCategory="Ready";
+  else if(p.category==="Fresh Sprouts")productCategory="Sprouts";
+  const old250=Number(p.price_250g)||0,old500=Number(p.price_500g)||0,old1000=Number(p.price_1kg)||0;
+  return {
+    id:p.id,name:p.name||"",cat:productCategory,
+    emoji:p.category==="Fresh Cut Fruits"?"🍎":p.category==="Fresh Sprouts"?"🌱":p.category==="Ready-to-Cook Mixes"?"🥗":"🥦",
+    image:p.image_url||"",
+    prices:{
+      Whole:{250:Number(p.whole_price_250g)||old250,500:Number(p.whole_price_500g)||old500,1000:Number(p.whole_price_1kg)||old1000},
+      Chopped:{250:Number(p.chop_price_250g)||0,500:Number(p.chop_price_500g)||0,1000:Number(p.chop_price_1kg)||0}
+    },
+    costs:{250:Number(p.cost_price_250g)||0,500:Number(p.cost_price_500g)||0,1000:Number(p.cost_price_1kg)||0},
+    status:p.status||"Available"
+  };
 }
 
-supabaseClient.channel("products-live").on("postgres_changes",{event:"*",schema:"public",table:"products"},function(){loadProductsFromSupabase();}).subscribe();
+async function loadProductsFromSupabase(){
+  if(productsLoadInProgress)return;
+  productsLoadInProgress=true;
+  try{
+    const {data,error}=await supabaseClient.from("products").select("*").order("id",{ascending:true});
+    if(error){
+      console.error("Products load error:",error);
+      if(!products.length)document.getElementById("products").innerHTML='<div style="grid-column:1/-1;background:#fff;padding:30px;text-align:center;border-radius:15px">Unable to load products. Please refresh.</div>';
+      return;
+    }
+    products=(data||[]).map(mapProduct);
+    render();
+    updateCart();
+  }catch(error){
+    console.error("Products refresh error:",error);
+  }finally{
+    productsLoadInProgress=false;
+  }
+}
+
+// Live database changes plus a 10-second safety refresh.
+supabaseClient.channel("products-live")
+  .on("postgres_changes",{event:"*",schema:"public",table:"products"},function(){loadProductsFromSupabase();})
+  .subscribe();
+
+setInterval(function(){
+  if(!document.hidden)loadProductsFromSupabase();
+},10000);
+
+document.addEventListener("visibilitychange",function(){
+  if(!document.hidden)loadProductsFromSupabase();
+});
+window.addEventListener("focus",function(){loadProductsFromSupabase();});
 
 document.querySelectorAll(".cat").forEach(function(button){
   button.addEventListener("click",function(){
@@ -176,10 +201,8 @@ document.querySelectorAll(".cat").forEach(function(button){
 document.getElementById("search").addEventListener("input",render);
 
 function unit(size){return size==="1000"?"1kg":size+"g";}
-
-function getPrice(p,type,size){
-  return Number(p.prices[type] && p.prices[type][size])||0;
-}
+function getPrice(p,type,size){return Number(p.prices[type]&&p.prices[type][size])||0;}
+function isOutOfStock(p){return String(p.status||"").trim().toLowerCase()==="out of stock";}
 
 function render(){
   const box=document.getElementById("products");
@@ -187,10 +210,8 @@ function render(){
   const list=products.filter(function(p){return p.cat===cat&&p.name.toLowerCase().includes(search)});
   document.getElementById("resultCount").textContent=list.length+" products";
   if(!list.length){box.innerHTML='<div style="grid-column:1/-1;background:#fff;border:1px dashed #cfdcc9;border-radius:15px;padding:30px;text-align:center;color:#68756d">No products found. Try another search.</div>';return;}
-
   box.innerHTML=list.map(function(p){
-    const pi=products.indexOf(p);
-    const out=String(p.status).toLowerCase()==="out of stock";
+    const pi=products.indexOf(p),out=isOutOfStock(p);
     const selected=cart.filter(x=>x.productId===p.id).reduce((t,x)=>t+x.qty,0);
     const wholePrice=getPrice(p,"Whole","250");
     return `<article class="card ${out?"out-of-stock":""}" ${out?"":"onclick=\"openProductPopup("+pi+")\" role=\"button\" tabindex=\"0\" onkeydown=\"if(event.key==='Enter'||event.key===' '){event.preventDefault();openProductPopup("+pi+")}\""} style="cursor:${out?"not-allowed":"pointer"}">
@@ -207,7 +228,7 @@ function render(){
 }
 
 function openProductPopup(pi){
-  const p=products[pi];if(!p||String(p.status).toLowerCase()==="out of stock")return;
+  const p=products[pi];if(!p||isOutOfStock(p))return;
   popupProductIndex=pi;popupType="Whole";popupQuantity=1;
   document.getElementById("popupProductName").textContent=p.name;
   document.getElementById("popupQty").textContent="1";
@@ -218,41 +239,34 @@ function openProductPopup(pi){
   imageBox.innerHTML=p.image?`<img class="popup-product-image" src="${p.image}" alt="${p.name}" onerror="this.style.display='none';document.getElementById('popupFallback').style.display='flex'"><div id="popupFallback" class="popup-emoji" style="display:none">${p.emoji}</div>`:`<div class="popup-emoji">${p.emoji}</div>`;
   updatePopupPrice();document.getElementById("productPopup").classList.add("open");
 }
-
 function closeProductPopup(event){
   if(event&&event.target!==event.currentTarget)return;
   document.getElementById("productPopup").classList.remove("open");popupProductIndex=-1;
 }
-
 function selectProductType(type){
   popupType=type;
   document.getElementById("wholeOption").classList.toggle("active",type==="Whole");
   document.getElementById("choppedOption").classList.toggle("active",type==="Chopped");
-  updatePopupPrice(); /* IMPORTANT: price changes immediately */
+  updatePopupPrice();
 }
-
 function changePopupQty(change){
   popupQuantity=Math.max(1,Math.min(99,popupQuantity+change));
   document.getElementById("popupQty").textContent=popupQuantity;updatePopupPrice();
 }
-
 function updatePopupPrice(){
   if(popupProductIndex<0)return;
   const p=products[popupProductIndex],size=document.getElementById("popupSize").value;
   const price=getPrice(p,popupType,size);
-  const label=popupType==="Chopped"?"Chopped / Cut":"Whole";
   document.getElementById("popupPrice").textContent="₹"+(price*popupQuantity);
-  document.getElementById("popupPrice").title=label+" price";
+  document.getElementById("popupPrice").title=(popupType==="Chopped"?"Chopped / Cut":"Whole")+" price";
 }
-
 function addFromPopup(){
   if(popupProductIndex<0)return;
   const p=products[popupProductIndex];
-  if(String(p.status).toLowerCase()==="out of stock")return;
-  const size=document.getElementById("popupSize").value;
-  const price=getPrice(p,popupType,size);
+  if(isOutOfStock(p)){alert("Sorry, this product is now Out of Stock.");closeProductPopup();return;}
+  const size=document.getElementById("popupSize").value,price=getPrice(p,popupType,size);
   if(price<=0){alert("This "+popupType+" price is not set yet. Please try another option.");return;}
-  const item=cart.find(x=>x.productId===p.id&&x.size===size&&x.type===popupType);
+  const item=cart.find(x=>String(x.productId)===String(p.id)&&x.size===size&&x.type===popupType);
   if(item)item.qty+=popupQuantity;
   else cart.push({productId:p.id,name:p.name,size:size,type:popupType,price:price,qty:popupQuantity});
   updateCart();render();closeProductPopup();
@@ -264,14 +278,18 @@ function updateCart(){
   document.getElementById("floatCount").textContent=count;
   const items=document.getElementById("items");
   items.innerHTML=!cart.length?'<div style="padding:30px 0;text-align:center;color:#68756d">Your cart is empty.<br><br>🌱 Add something fresh to get started.</div>':cart.map(function(item,index){
-    return `<div class="item"><div class="itemtop"><b>${item.name}</b><b>₹${item.price*item.qty}</b></div><div class="itemmeta">${item.type||"Whole"} • ${unit(item.size)} • ₹${item.price} each</div><div class="qty"><button onclick="qty(${index},-1)">−</button><span>${item.qty}</span><button onclick="qty(${index},1)">+</button><button class="remove" onclick="removeItem(${index})">Remove</button></div></div>`;
+    return `<div class="item"><div class="itemtop"><b>${item.name}</b><b>₹${item.price*item.qty}</b></div><div class="itemmeta">${item.type||"Whole"} • ${unit(item.size)} • ₹${item.price} each</div><div class="qty"><button onclick="qty(${index},-1)" ${isPlacingOrder?"disabled":""}>−</button><span>${item.qty}</span><button onclick="qty(${index},1)" ${isPlacingOrder?"disabled":""}>+</button><button class="remove" onclick="removeItem(${index})" ${isPlacingOrder?"disabled":""}>Remove</button></div></div>`;
   }).join("");
   const subtotal=cart.reduce((t,x)=>t+x.price*x.qty,0),delivery=getDeliveryCharge(subtotal);
-  document.getElementById("sub").textContent=subtotal;document.getElementById("del").textContent=delivery?"₹"+delivery:"FREE";document.getElementById("total").textContent=subtotal+delivery;
+  document.getElementById("sub").textContent=subtotal;
+  document.getElementById("del").textContent=delivery?"₹"+delivery:"FREE";
+  document.getElementById("total").textContent=subtotal+delivery;
+  const button=document.getElementById("whatsappButton");
+  button.disabled=isPlacingOrder;
+  button.textContent=isPlacingOrder?"Processing Order...":"Confirm Order on WhatsApp →";
 }
-
-function qty(index,change){if(!cart[index])return;cart[index].qty+=change;if(cart[index].qty<=0)cart.splice(index,1);updateCart();render();}
-function removeItem(index){cart.splice(index,1);updateCart();render();}
+function qty(index,change){if(isPlacingOrder||!cart[index])return;cart[index].qty+=change;if(cart[index].qty<=0)cart.splice(index,1);updateCart();render();}
+function removeItem(index){if(isPlacingOrder)return;cart.splice(index,1);updateCart();render();}
 function toggleCart(){document.getElementById("cartPanel").classList.toggle("open");updateCart();}
 
 async function trackOrder(){
@@ -286,36 +304,67 @@ async function trackOrder(){
 }
 
 async function whatsapp(){
+  if(isPlacingOrder)return;
   if(!cart.length){alert("Please add a product first.");return;}
-  const name=document.getElementById("name").value.trim(),phone=document.getElementById("phone").value.trim(),address=document.getElementById("address").value.trim();
+  const name=document.getElementById("name").value.trim();
+  const phone=document.getElementById("phone").value.trim();
+  const address=document.getElementById("address").value.trim();
   if(!name||!phone||!address){alert("Please fill your name, mobile number and Mulund delivery address.");return;}
-  const subtotal=cart.reduce((t,x)=>t+x.price*x.qty,0),delivery=getDeliveryCharge(subtotal),total=subtotal+delivery,payment=document.getElementById("pay").value;
-  const orderNumber="CDD"+Date.now().toString().slice(-6);
-  // Save a complete item snapshot so Admin can display products and calculate profit later.
-  const orderItems=cart.map(x=>{
-    const product=products.find(p=>String(p.id)===String(x.productId));
-    const rawCost=product ? product.costs[x.size] : null;
-    const cost=(rawCost!==null && rawCost!==undefined && rawCost!=="" && Number.isFinite(Number(rawCost)) && Number(rawCost)>0) ? Number(rawCost) : null;
-    return {
-      product_id:x.productId,
-      name:x.name,
-      type:x.type||"Whole",
-      size:unit(x.size),
-      size_grams:Number(x.size),
-      quantity:Number(x.qty),
-      qty:Number(x.qty),
-      price:Number(x.price),
-      selling_price:Number(x.price),
-      cost_price:cost
+  if(!/^[0-9+\-\s]{10,15}$/.test(phone)){alert("Please enter a valid mobile number.");return;}
+
+  // Open a tab immediately during the click. This avoids browser popup blocking
+  // while the database request is running.
+  const whatsappTab=window.open("about:blank","_blank");
+  if(!whatsappTab){alert("Please allow pop-ups for kanadefoods.in, then click Confirm Order once again.");return;}
+
+  isPlacingOrder=true;
+  updateCart();
+
+  try{
+    // Always check current stock from Supabase immediately before saving an order.
+    const productIds=[...new Set(cart.map(x=>x.productId))];
+    const {data:latestProducts,error:stockError}=await supabaseClient
+      .from("products").select("id,name,status")
+      .in("id",productIds);
+
+    if(stockError)throw new Error("Could not verify current stock. Please try again.");
+    if(!latestProducts||latestProducts.length!==productIds.length)throw new Error("One or more products are no longer available. Please refresh the page and check your cart.");
+
+    const unavailable=latestProducts.filter(p=>String(p.status||"").trim().toLowerCase()==="out of stock");
+    if(unavailable.length){
+      await loadProductsFromSupabase();
+      whatsappTab.close();
+      alert("Sorry! "+unavailable.map(p=>p.name).join(", ")+" is now Out of Stock. Your order was not placed. Please update your cart.");
+      return;
+    }
+
+    // Snapshot the cart only after current stock has been verified.
+    const orderCart=cart.map(x=>({...x}));
+    const subtotal=orderCart.reduce((t,x)=>t+x.price*x.qty,0);
+    const delivery=getDeliveryCharge(subtotal),total=subtotal+delivery;
+    const payment=document.getElementById("pay").value;
+    const orderNumber="CDD"+Date.now().toString().slice(-6);
+    const orderItems=orderCart.map(x=>{
+      const product=products.find(p=>String(p.id)===String(x.productId));
+      const rawCost=product?product.costs[x.size]:null;
+      const cost=(rawCost!==null&&rawCost!==undefined&&rawCost!==""&&Number.isFinite(Number(rawCost))&&Number(rawCost)>0)?Number(rawCost):null;
+      return {
+        product_id:x.productId,name:x.name,type:x.type||"Whole",size:unit(x.size),
+        size_grams:Number(x.size),quantity:Number(x.qty),qty:Number(x.qty),
+        price:Number(x.price),selling_price:Number(x.price),cost_price:cost
+      };
+    });
+    const orderPayload={
+      order_number:orderNumber,customer_name:name,mobile:phone,address:address,
+      area:"Mulund",items:orderItems,total_amount:total,
+      payment_method:payment,status:"Pending"
     };
-  });
-  // Keep the item list in the existing orders.items column. Admin reads this
-  // snapshot directly, so the order does not depend on current product records.
-  const orderPayload={order_number:orderNumber,customer_name:name,mobile:phone,address:address,area:"Mulund",items:orderItems,total_amount:total,payment_method:payment,status:"Pending"};
-  const {error}=await supabaseClient.from("orders").insert([orderPayload]);
-  if(error){console.error(error);alert("Order could not be placed. Please try again.");return;}
-  const lines=cart.map(x=>x.name+" - "+(x.type||"Whole")+" - "+unit(x.size)+" x "+x.qty+" = ₹"+(x.price*x.qty)).join("\n");
-  const message=`Hello Kanade Foods - Chop Drop Done!
+
+    const {error:insertError}=await supabaseClient.from("orders").insert([orderPayload]);
+    if(insertError)throw new Error("Order could not be saved. Please try again.");
+
+    const lines=orderCart.map(x=>x.name+" - "+(x.type||"Whole")+" - "+unit(x.size)+" x "+x.qty+" = ₹"+(x.price*x.qty)).join("\n");
+    const message=`Hello Kanade Foods - Chop Drop Done!
 
 Order No: ${orderNumber}
 
@@ -331,8 +380,20 @@ Customer: ${name}
 Mobile: ${phone}
 Delivery Area: Mulund
 Address: ${address}`;
-  alert("Order placed successfully! Order No: "+orderNumber);
-  window.open("https://wa.me/918104130330?text="+encodeURIComponent(message),"_blank");
+
+    alert("Order placed successfully! Order No: "+orderNumber);
+    cart=[];
+    updateCart();
+    render();
+    whatsappTab.location.href="https://wa.me/918104130330?text="+encodeURIComponent(message);
+  }catch(error){
+    console.error("Order placement error:",error);
+    try{whatsappTab.close();}catch(_){}
+    alert(error.message||"Order could not be placed. Please try again.");
+  }finally{
+    isPlacingOrder=false;
+    updateCart();
+  }
 }
 
 updateCart();
